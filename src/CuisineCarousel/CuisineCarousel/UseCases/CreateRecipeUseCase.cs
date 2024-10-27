@@ -8,6 +8,6 @@ internal sealed class CreateRecipeUseCase(IOriginalDish originalDish, ITwist twi
     {
         var foundDish = originalDish.GetById(originalDishId);
         var foundTwist = twist.GetById(twistId);
-        return recipe.CreateRecipeAsync(foundDish.Name, foundTwist.Name);
+        return recipe.CreateRecipeAsync(foundDish.Name, foundDish.Description, foundTwist.Name);
     }
 }

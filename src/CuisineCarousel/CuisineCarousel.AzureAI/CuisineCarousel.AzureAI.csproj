@@ -22,4 +22,11 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Azure.Identity" Version="1.13.1" />
+      <PackageReference Include="Microsoft.SemanticKernel" Version="1.25.0" />
+      <PackageReference Include="Microsoft.SemanticKernel.Prompty" Version="1.25.0-alpha" />
+      <PackageReference Include="Prompty.Core" Version="0.0.11-alpha" />
+    </ItemGroup>
+
 </Project>

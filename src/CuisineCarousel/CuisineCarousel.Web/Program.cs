@@ -11,7 +11,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddMudServices();
 
-builder.Services.AddDomain().AddStorage().AddAzureAI();
+builder.Services
+    .AddDomain()
+    .AddStorage()
+    .AddAzureAi(builder.Configuration);
 
 var app = builder.Build();
 
