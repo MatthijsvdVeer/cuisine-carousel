@@ -16,4 +16,10 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Prompts\CreateRecipe.prompty">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
