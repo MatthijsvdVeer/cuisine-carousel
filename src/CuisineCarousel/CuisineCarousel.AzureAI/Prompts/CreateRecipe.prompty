@@ -11,6 +11,16 @@ model:
   parameters:
     max_tokens: 3000
     temperature: 0.8
+inputs:
+  originalDishName: 
+    type: string
+    description: The name of the original dish.
+  originalDishDescription:
+    type: string
+    description: The description of the original dish.
+  twist:
+    type: string
+    description: The twist to add to the original dish.
 sample:
   originalDishName: Spaghetti Carbonara
   originalDishDescription: > 
