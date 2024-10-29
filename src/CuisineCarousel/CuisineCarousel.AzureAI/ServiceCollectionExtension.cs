@@ -13,8 +13,8 @@ public static class ServiceCollectionExtension
     {
         var config = OpenAiConfiguration.Get(configuration);
         services
-            .AddAzureOpenAIChatCompletion(ModelNames.Gpt4o, config.ApiUrl, new DefaultAzureCredential())
-            .AddAzureOpenAIChatCompletion(ModelNames.Gpt35, config.ApiUrl, new DefaultAzureCredential());
+            .AddAzureOpenAIChatCompletion(ModelNames.Gpt4o, config.ApiUrl, new DefaultAzureCredential(), apiVersion: "2024-08-01-preview", modelId: ModelNames.Gpt4o)
+            .AddAzureOpenAIChatCompletion(ModelNames.Gpt35, config.ApiUrl, new DefaultAzureCredential(), apiVersion: "2024-08-01-preview", modelId: ModelNames.Gpt35);
 
         var kernelBuilder = services.AddKernel();
         kernelBuilder.Plugins.AddClippyFunctions();

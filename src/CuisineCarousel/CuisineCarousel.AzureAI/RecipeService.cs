@@ -1,32 +1,29 @@
-﻿using CuisineCarousel.Models;
+﻿using System.Text.Json;
+using CuisineCarousel.Models;
 using Microsoft.SemanticKernel;
 
 namespace CuisineCarousel.AzureAI;
 
 internal sealed class RecipeService(Kernel kernel) : IRecipe
 {
+    private static readonly JsonSerializerOptions JsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
+
     public async Task<Recipe> CreateRecipeAsync(string originalDishName, string originalDishDescription, string twist)
     {
-        var arguments = new KernelArguments()
+        var arguments = new KernelArguments
         {
             { "originalDishName", originalDishName },
             { "originalDishDescription", originalDishDescription },
             { "twist", twist }
         };
 
-        try
+        var functionResult = await kernel.InvokeAsync(PluginNames.Prompty, FunctionNames.CreateRecipe, arguments);
+        var recipeString = functionResult.GetValue<string>();
+        var recipe = JsonSerializer.Deserialize<Recipe>(recipeString!,
+            JsonSerializerOptions);
+        if (recipe != null)
         {
-            var functionResult = await kernel.InvokeAsync(PluginNames.Prompty, FunctionNames.CreateRecipe, arguments);
-            var recipe = functionResult.GetValue<Recipe>();
-            if (recipe != null)
-            {
-                return recipe;
-            }
-        }
-        catch (HttpOperationException exception)
-        {
-            
-            throw;
+            return recipe;
         }
 
         throw new InvalidOperationException("Failed to create recipe");
