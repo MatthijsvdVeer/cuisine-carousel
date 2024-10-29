@@ -7,19 +7,26 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CuisineCarousel\CuisineCarousel.csproj" />
+        <ProjectReference Include="..\CuisineCarousel\CuisineCarousel.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.10\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-      </Reference>
+        <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.10\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Prompts\CreateRecipe.prompty">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+        <None Update="Prompts\CreateRecipe.prompty">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Azure.Identity" Version="1.13.1"/>
+        <PackageReference Include="Microsoft.SemanticKernel" Version="1.25.0"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Prompty" Version="1.25.0-alpha"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0"/>
     </ItemGroup>
 
 </Project>

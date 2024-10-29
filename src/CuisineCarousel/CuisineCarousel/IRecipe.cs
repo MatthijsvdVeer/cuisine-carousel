@@ -4,7 +4,7 @@ namespace CuisineCarousel;
 
 public interface IRecipe
 {
-    Task<Recipe> CreateRecipeAsync(string originalDish, string twist);
+    Task<Recipe> CreateRecipeAsync(string originalDishName, string originalDishDescription, string twist);
     
-    Task<Recipe> UpdateRecipeAsync(Recipe originalDish, string instructions);
+    Task<Recipe> UpdateRecipeAsync(Recipe recipe, string instructions);
 }
