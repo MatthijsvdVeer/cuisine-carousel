@@ -1,6 +1,7 @@
 param openAiLocation string
 param workloadName string = 'cuisine'
 param locationShorthand object
+param principalId string // Add this parameter to receive the principalId
 
 var openAiShortHand = locationShorthand[openAiLocation]
 
@@ -125,4 +126,23 @@ resource contentFilter 'Microsoft.CognitiveServices/accounts/raiPolicies@2024-06
       }
     ]
   }
+}
+
+resource monitoringReaderRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  scope: subscription()
+  name: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd' // Cognitive Services OpenAI User
+}
+
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: guid(openai.id, principalId, monitoringReaderRoleDefinition.id)
+  scope: openai
+  properties: {
+    roleDefinitionId: monitoringReaderRoleDefinition.id
+    principalId: principalId
+  }
+}
+
+output openai object = {
+  id: openai.id
+  endpoint: openai.properties.endpoint
 }

@@ -11,12 +11,32 @@ var locationShorthand = {
 
 var shorthand = locationShorthand[location]
 
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' = {
+  name: 'law-${workloadName}-${shorthand}'
+  location: location
+  properties: {
+    sku: {
+      name: 'PerGB2018'
+    }
+  }
+}
+
+resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: 'appi-${workloadName}-${shorthand}'
+  kind: 'web'
+  location: location
+  properties: {
+    Application_Type: 'web'
+    WorkspaceResourceId: logAnalyticsWorkspace.id
+  }
+}
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
   name: 'asp-${workloadName}-${shorthand}'
   location: location
   sku: {
-    name: 'P1v2'
-    tier: 'PremiumV2'
+    name: 'B1'
+    tier: 'Basic'
   }
   properties: {
     reserved: true
@@ -26,8 +46,23 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
 resource appService 'Microsoft.Web/sites@2021-02-01' = {
   name: 'app-${workloadName}-${shorthand}'
   location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     serverFarmId: appServicePlan.id
+    siteConfig: {
+      appSettings: [
+        {
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: appInsights.properties.InstrumentationKey
+        }
+        {
+          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+          value: 'InstrumentationKey=${appInsights.properties.InstrumentationKey}'
+        }
+      ]
+    }
   }
 }
 
@@ -37,14 +72,8 @@ module openAiModule 'openai.bicep' = {
     openAiLocation: openAiLocation
     workloadName: workloadName
     locationShorthand: locationShorthand
+    principalId: appService.identity.principalId
   }
 }
 
-resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
-  name: 'ai-${workloadName}-${shorthand}'
-  kind: 'web'
-  location: location
-  properties: {
-    Application_Type: 'web'
-  }
-}
+output openAiEndpoint string = openAiModule.outputs.openai.endpoint
