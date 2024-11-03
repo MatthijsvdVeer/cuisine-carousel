@@ -77,7 +77,8 @@ jobs:
         with:
           app-name: ${{ needs.deploy-infra.outputs.appServiceName }}
           app-settings-json: |
-            {
-              "CUISINE_CAROUSEL_OPENAI_URL": "${{ needs.deploy-infra.outputs.openAiEndpoint }}"
-            }
+            [{            {
+              "name": "CUISINE_CAROUSEL_OPENAI_URL",
+              "value": "${{ needs.deploy-infra.outputs.openAiEndpoint }}"
+            }]
           
