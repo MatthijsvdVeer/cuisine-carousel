@@ -45,7 +45,7 @@ jobs:
       - name: 🏗️ Build Solution
         shell: pwsh
         run: |
-          dotnet publish ./src/CuisineCarousel/CuisineCarousel.sln --configuration Release --runtime win-x86 --self-contained true
+          dotnet publish ./src/CuisineCarousel/CuisineCarousel.sln --configuration Release
       - name: ⬆️ Upload Artifact
         uses: actions/upload-artifact@v3
         with:
