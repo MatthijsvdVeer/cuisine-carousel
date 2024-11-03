@@ -8,6 +8,10 @@ on:
   workflow_dispatch:
 name: 🚀 Deploy
 
+env:
+  DOTNET_VERSION: '8.0' 
+  ARTIFACT_DIR: './artifacts'
+
 jobs:
   deploy-infra:
     name: 🏗️ Deploy Infrastructure
@@ -29,3 +33,21 @@ jobs:
           template: ./infra/main.bicep
           scope: 'resourcegroup'
           parameters: 'openAiLocation=${{ vars.OPENAI_LOCATION }}'
+  build-code:
+    name: 🛠️ Build Code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: 🔧 Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: 🏗️ Build Solution
+        shell: pwsh
+        run: |
+          dotnet publish ./src/CuisineCarousel/CuisineCarousel.sln --configuration Release --runtime win-x86 --self-contained true
+      - name: ⬆️ Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          path: ./src/CuisineCarousel/CuisineCarousel.Web/bin/Release/net8.0/publish/
