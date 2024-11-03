@@ -77,3 +77,4 @@ module openAiModule 'openai.bicep' = {
 }
 
 output openAiEndpoint string = openAiModule.outputs.openai.endpoint
+output appServiceName string = appService.name
