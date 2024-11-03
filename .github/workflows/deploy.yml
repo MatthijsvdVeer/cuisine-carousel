@@ -72,5 +72,9 @@ jobs:
         with:
           app-name: ${{ needs.deploy-infra.outputs.appServiceName }}
           package: ${{ github.workspace }}/artifacts
-      - name: add the openai andpoint in settings
-        run: az webapp config appsettings set --name ${{ needs.deploy-infra.outputs.appServiceName }} --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} --settings CUISINE_CAROUSEL_OPENAI_URL=${{ needs.deploy-infra.outputs.openAiEndpoint }}
+      - name: 🧰 Set App Settings
+        run: |
+          az webapp config appsettings set \
+            --name ${{ needs.deploy-infra.outputs.appServiceName }} \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
+            --settings CUISINE_CAROUSEL_OPENAI_URL=${{ needs.deploy-infra.outputs.openAiEndpoint }}
