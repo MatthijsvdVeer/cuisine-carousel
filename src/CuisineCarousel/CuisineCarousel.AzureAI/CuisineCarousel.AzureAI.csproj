@@ -11,12 +11,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-            <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.10\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
         <None Update="Prompts\CreateRecipe.prompty">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
