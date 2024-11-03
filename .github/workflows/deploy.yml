@@ -1,12 +1,12 @@
 on:
-    push:
-      branches:
-        - 'main'
-      paths:
-      - 'src/**'
-      - 'infra/**'
-    workflow_dispatch:
-  name: 🚀 Deploy
+  push:
+    branches:
+      - 'main'
+    paths:
+    - 'src/**'
+    - 'infra/**'
+  workflow_dispatch:
+name: 🚀 Deploy
 
 jobs:
   deploy-infra:
@@ -27,3 +27,4 @@ jobs:
         with:
           resourceGroupName: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
           template: ./infra/main.bicep
+          scope: 'resourcegroup'
