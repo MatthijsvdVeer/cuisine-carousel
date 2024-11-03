@@ -1,5 +1,10 @@
-param location string
+@description('Resource Location')
+param location string = resourceGroup().location
+
+@description('OpenAI Location')
 param openAiLocation string
+
+@description('Workload Name')
 param workloadName string = 'cuisine'
 
 var locationShorthand = {
