@@ -12,7 +12,7 @@ internal sealed class OpenAiConfiguration
 
     public static OpenAiConfiguration Get(IConfiguration config)
     {
-        var openAiUrl = config["CUISINE_CAROUSEL_OPENAI_URL"] ?? throw new ApplicationException("Missing OPENAI_URL configuration value");
+        var openAiUrl = config["CUISINE_CAROUSEL_OPENAI_URL"] ?? throw new ApplicationException("Missing CUISINE_CAROUSEL_OPENAI_URL configuration value");
         return new(openAiUrl);
     }
 }

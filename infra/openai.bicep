@@ -21,6 +21,7 @@ resource openai 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
       defaultAction: 'Deny'
     }
     disableLocalAuth: true
+    customSubDomainName: 'oai-${workloadName}-${openAiShortHand}'
   }
 }
 
@@ -39,7 +40,7 @@ resource model 'Microsoft.CognitiveServices/accounts/deployments@2024-06-01-prev
     }
     versionUpgradeOption: 'OnceNewDefaultVersionAvailable'
     currentCapacity: 10
-    raiPolicyName: 'Microsoft.Default'
+    raiPolicyName: 'Microsoft.DefaultV2'
   }
 }
 
@@ -47,7 +48,7 @@ resource contentFilter 'Microsoft.CognitiveServices/accounts/raiPolicies@2024-06
   parent: openai
   name: 'cuisine-filter'
   properties: {
-    basePolicyName: 'Microsoft.Default'
+    basePolicyName: 'Microsoft.DefaultV2'
     mode: 'Blocking'
     contentFilters: [
       {
