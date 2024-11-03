@@ -1,0 +1,29 @@
+on:
+    push:
+      branches:
+        - 'main'
+      paths:
+      - 'src/**'
+      - 'infra/**'
+    workflow_dispatch:
+  name: 🚀 Deploy
+
+jobs:
+  deploy-infra:
+    name: 🏗️ Deploy Infrastructure
+    runs-on: ubuntu-latest
+    outputs:
+      appServiceName: ${{ steps.deploy.outputs.appServiceName }}
+      openAiEndpoint: ${{ steps.deploy.outputs.openAiEndpoint }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: 🔑 Azure Login 
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: 🏗️ Deploy
+        id: deploy
+        uses: azure/arm-deploy@v2
+        with:
+          resourceGroupName: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
+          template: ./infra/main.bicep
