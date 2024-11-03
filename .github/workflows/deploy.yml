@@ -28,3 +28,4 @@ jobs:
           resourceGroupName: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
           template: ./infra/main.bicep
           scope: 'resourcegroup'
+          parameters: 'openAiLocation=${{ vars.OPENAI_LOCATION }}'
