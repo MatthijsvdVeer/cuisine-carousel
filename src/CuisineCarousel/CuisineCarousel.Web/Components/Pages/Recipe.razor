@@ -60,10 +60,10 @@
 
 @code {
 
-    [Inject] private ICreateRecipeUseCase createRecipeUseCase { get; set; }
-    [Inject] private IUpdateRecipeUseCase updateRecipeUseCase { get; set; }
-    [Inject] private IOriginalDish OriginalDish { get; set; }
-    [Inject] private ITwist TwistService { get; set; }
+    [Inject] private ICreateRecipeUseCase! createRecipeUseCase { get; set; }
+    [Inject] private IUpdateRecipeUseCase! updateRecipeUseCase { get; set; }
+    [Inject] private IOriginalDish! OriginalDish { get; set; }
+    [Inject] private ITwist! TwistService { get; set; }
 
     private Models.Recipe? newRecipe { get; set; }
     private Models.Recipe? updatedRecipe { get; set; }
