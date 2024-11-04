@@ -18,7 +18,7 @@ resource openai 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
   properties: {
     publicNetworkAccess: 'Enabled'
     networkAcls: {
-      defaultAction: 'Deny'
+      defaultAction: 'Allow'
     }
     disableLocalAuth: true
     customSubDomainName: 'oai-${workloadName}-${openAiShortHand}'
