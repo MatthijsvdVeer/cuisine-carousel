@@ -6,51 +6,51 @@
 <MudContainer>
     <MudGrid>
         <MudItem xs="6">
-            <MudSelect @bind-Value="originalDishId" Label="Select dish" Placeholder="Pick a classic" AdornmentIcon="@Icons.Material.Filled.Fastfood" AdornmentColor="Color.Primary">
-                @foreach (var dish in originalDishes)
+            <MudSelect @bind-Value="OriginalDishId" Label="Select dish" Placeholder="Pick a classic" AdornmentIcon="@Icons.Material.Filled.Fastfood" AdornmentColor="Color.Primary">
+                @foreach (var dish in OriginalDishes)
                 {
                     <MudSelectItem Value="@dish.Id">@dish.Name</MudSelectItem>
                 }
             </MudSelect>
         </MudItem>
         <MudItem xs="6">
-            <MudSelect @bind-Value="twistId" Label="Select twist" Placeholder="Make it weird" AdornmentIcon="@Icons.Material.Filled.AddTask" AdornmentColor="Color.Primary">
-                @foreach (var twist in twists)
+            <MudSelect @bind-Value="TwistId" Label="Select twist" Placeholder="Make it weird" AdornmentIcon="@Icons.Material.Filled.AddTask" AdornmentColor="Color.Primary">
+                @foreach (var twist in Twists)
                 {
                     <MudSelectItem Value="@twist.Id">@twist.Name</MudSelectItem>
                 }
             </MudSelect>
         </MudItem>
         <MudItem xs="12">
-            <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(originalDishId) || string.IsNullOrEmpty(twistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
+            <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
         </MudItem>
     </MudGrid>
 </MudContainer>
 
-@if (newRecipe != null)
+@if (NewRecipe != null)
 {
     <MudContainer>
         <MudText Typo="Typo.h4" Class="mt-8">Your new recipe:</MudText>
-        <MudText Typo="Typo.h5" Class="mt-8">@newRecipe.Title</MudText>
-        <MudText Typo="Typo.body1" Class="mt-8">@newRecipe.Description</MudText>
-        <MudText Typo="Typo.body2" Class="mt-8">@newRecipe.Instructions</MudText>
-        <MudTextField Label="Instructions" Multiline="true" Rows="4" Variant="Variant.Filled" @bind-Value="updateInstructions"/>
-        <MudButton OnClick="() => UpdateDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(originalDishId) || string.IsNullOrEmpty(twistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Update Dish!</MudButton>
+        <MudText Typo="Typo.h5" Class="mt-8">@NewRecipe.Title</MudText>
+        <MudText Typo="Typo.body1" Class="mt-8">@NewRecipe.Description</MudText>
+        <MudText Typo="Typo.body2" Class="mt-8">@NewRecipe.Instructions</MudText>
+        <MudTextField Label="Instructions" Multiline="true" Rows="4" Variant="Variant.Filled" @bind-Value="UpdateInstructions"/>
+        <MudButton OnClick="() => UpdateDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Update Dish!</MudButton>
     </MudContainer>
 }
 
 
-@if (updatedRecipe != null)
+@if (UpdatedRecipe != null)
 {
     <MudContainer>
         <MudText Typo="Typo.h4" Class="mt-8">Your updated recipe:</MudText>
-        <MudText Typo="Typo.h5" Class="mt-8">@updatedRecipe.Title</MudText>
-        <MudText Typo="Typo.body1" Class="mt-8">@updatedRecipe.Description</MudText>
-        <MudText Typo="Typo.body2" Class="mt-8">@updatedRecipe.Instructions</MudText>
+        <MudText Typo="Typo.h5" Class="mt-8">@UpdatedRecipe.Title</MudText>
+        <MudText Typo="Typo.body1" Class="mt-8">@UpdatedRecipe.Description</MudText>
+        <MudText Typo="Typo.body2" Class="mt-8">@UpdatedRecipe.Instructions</MudText>
     </MudContainer>
 }
 
-@if (newRecipe != null || updatedRecipe != null)
+@if (NewRecipe != null || UpdatedRecipe != null)
 {
     <MudContainer>
         <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Generate Image!</MudButton>
@@ -60,29 +60,29 @@
 
 @code {
 
-    [Inject] private ICreateRecipeUseCase createRecipeUseCase { get; set; }
-    [Inject] private IUpdateRecipeUseCase updateRecipeUseCase { get; set; }
-    [Inject] private IOriginalDish OriginalDish { get; set; }
-    [Inject] private ITwist TwistService { get; set; }
+    [Inject] private ICreateRecipeUseCase CreateRecipeUseCase { get; set; } = null!;
+    [Inject] private IUpdateRecipeUseCase UpdateRecipeUseCase { get; set; } = null!;
+    [Inject] private IOriginalDish OriginalDish { get; set; } = null!;
+    [Inject] private ITwist TwistService { get; set; } = null!;
 
-    private Models.Recipe? newRecipe { get; set; }
-    private Models.Recipe? updatedRecipe { get; set; }
+    private Models.Recipe? NewRecipe { get; set; }
+    private Models.Recipe? UpdatedRecipe { get; set; }
 
-    private IEnumerable<OriginalDish> originalDishes { get; set; }
-    private IEnumerable<Twist> twists { get; set; }
+    private IEnumerable<OriginalDish> OriginalDishes { get; set; } = Array.Empty<OriginalDish>();
+    private IEnumerable<Twist> Twists { get; set; } = Array.Empty<Twist>();
 
-    private string updateInstructions { get; set; }
-    private string originalDishId { get; set; }
-    private string twistId { get; set; }
+    private string UpdateInstructions { get; set; } = string.Empty;
+    private string OriginalDishId { get; set; } = string.Empty;
+    private string TwistId { get; set; } = string.Empty;
 
     private async Task BuildDish()
     {
-        newRecipe = await createRecipeUseCase.CreateRecipeAsync(originalDishId, twistId);
+        NewRecipe = await CreateRecipeUseCase.CreateRecipeAsync(OriginalDishId, TwistId);
     }
 
     private async Task UpdateDish()
     {
-        updatedRecipe = await updateRecipeUseCase.UpdateRecipeAsync(newRecipe, updateInstructions);
+        UpdatedRecipe = await UpdateRecipeUseCase.UpdateRecipeAsync(NewRecipe!, UpdateInstructions);
     }
 
     private void GenerateImage()
@@ -92,8 +92,8 @@
 
     protected override Task OnInitializedAsync()
     {
-        originalDishes = OriginalDish.GetAll();
-        twists = TwistService.GetAll();
+        OriginalDishes = OriginalDish.GetAll();
+        Twists = TwistService.GetAll();
         return base.OnInitializedAsync();
     }
 
