@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CuisineCarousel.AzureAI", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CuisineCarousel.Storage", "CuisineCarousel.Storage\CuisineCarousel.Storage.csproj", "{F28BD79B-A0F5-4E08-AA6D-27C29E4CAFA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CuisineCarousel.AppHost", "CuisineCarousel.AppHost\CuisineCarousel.AppHost.csproj", "{8A93D0B9-5801-4A62-80AC-645B2FE694B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CuisineCarousel.Observability", "CuisineCarousel.Observability\CuisineCarousel.Observability.csproj", "{DA2B6D46-2AFB-4B9F-AD31-5A0DD6AEB9B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,13 @@ Global
 		{F28BD79B-A0F5-4E08-AA6D-27C29E4CAFA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F28BD79B-A0F5-4E08-AA6D-27C29E4CAFA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F28BD79B-A0F5-4E08-AA6D-27C29E4CAFA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A93D0B9-5801-4A62-80AC-645B2FE694B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A93D0B9-5801-4A62-80AC-645B2FE694B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A93D0B9-5801-4A62-80AC-645B2FE694B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A93D0B9-5801-4A62-80AC-645B2FE694B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA2B6D46-2AFB-4B9F-AD31-5A0DD6AEB9B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA2B6D46-2AFB-4B9F-AD31-5A0DD6AEB9B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA2B6D46-2AFB-4B9F-AD31-5A0DD6AEB9B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA2B6D46-2AFB-4B9F-AD31-5A0DD6AEB9B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
