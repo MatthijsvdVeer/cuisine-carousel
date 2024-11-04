@@ -42,6 +42,8 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: 🗻 Ensure Aspire workload
+        run: dotnet workload install aspire
       - name: 🏗️ Build Solution
         shell: pwsh
         run: |
