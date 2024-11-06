@@ -23,7 +23,7 @@ public static class ServiceCollectionExtension
         return services;
     }
 
-    private static IKernelBuilderPlugins AddClippyFunctions(this IKernelBuilderPlugins kernelPlugins)
+   private static IKernelBuilderPlugins AddClippyFunctions(this IKernelBuilderPlugins kernelPlugins)
     {
         var functions = CreatePromptyFunctions().ToArray();
 
