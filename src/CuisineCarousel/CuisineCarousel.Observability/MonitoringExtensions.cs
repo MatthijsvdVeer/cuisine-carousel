@@ -35,12 +35,12 @@ public static class MonitoringExtensions
             {
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddRuntimeInstrumentation();
+                    .AddRuntimeInstrumentation()
+                    .AddMeter("Microsoft.SemanticKernel*");
             }).WithTracing(tracing =>
             {
                 _ = tracing.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddAzureMonitorTraceExporter()
                     .AddSource("Microsoft.SemanticKernel*");
             });
             
