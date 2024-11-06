@@ -9,6 +9,7 @@ public static class ServiceCollectionExtension
     {
         services.AddTransient<ICreateRecipeUseCase, CreateRecipeUseCase>();
         services.AddTransient<IUpdateRecipeUseCase, UpdateRecipeUseCase>();
+        services.AddTransient<ICreateCollaborativeRecipeUseCase, CreateCollaborativeRecipeUseCase>();
         return services;
     }
 }

@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <NoWarn>SKEXP0001;SKEXP0110;SKEXP0040</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,11 +15,19 @@
         <None Update="Prompts\CreateRecipe.prompty">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Prompts\GordonRamsAI.prompty">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Prompts\ChatManager.prompty">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Azure.Identity" Version="1.13.1"/>
         <PackageReference Include="Microsoft.SemanticKernel" Version="1.25.0"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.27.0-alpha" />
+        <PackageReference Include="Microsoft.SemanticKernel.Agents.OpenAI" Version="1.27.0-alpha" />
         <PackageReference Include="Microsoft.SemanticKernel.Prompty" Version="1.25.0-alpha"/>
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0"/>
     </ItemGroup>

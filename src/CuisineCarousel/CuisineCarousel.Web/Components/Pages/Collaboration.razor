@@ -1,0 +1,83 @@
+﻿@page "/collaboration"
+@attribute [StreamRendering]
+@using CuisineCarousel.Models
+@using CuisineCarousel.UseCases
+<h3>Recipe</h3>
+<MudContainer>
+    <MudGrid>
+        <MudItem xs="6">
+            <MudSelect @bind-Value="OriginalDishId" Label="Select dish" Placeholder="Pick a classic" AdornmentIcon="@Icons.Material.Filled.Fastfood" AdornmentColor="Color.Primary">
+                @foreach (var dish in OriginalDishes)
+                {
+                    <MudSelectItem Value="@dish.Id">@dish.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="6">
+            <MudSelect @bind-Value="TwistId" Label="Select twist" Placeholder="Make it weird" AdornmentIcon="@Icons.Material.Filled.AddTask" AdornmentColor="Color.Primary">
+                @foreach (var twist in Twists)
+                {
+                    <MudSelectItem Value="@twist.Id">@twist.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12">
+            <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@if (CollaborationSteps.Any())
+{
+    @foreach(var step in CollaborationSteps)
+    {
+        <MudContainer>
+            <MudText Typo="Typo.h5" Class="mt-8">@step.Author</MudText>
+            @if (step.Recipe != null)
+            {
+                <MudText Typo="Typo.h5" Class="mt-8">@step.Recipe.Title</MudText>
+                <MudText Typo="Typo.body1" Class="mt-8">@step.Recipe.Description</MudText>
+                <MudText Typo="Typo.body2" Class="mt-8">@step.Recipe.Instructions</MudText>
+            }
+            else
+            {
+                <MudText Typo="Typo.body2" Class="mt-8">@step.Message</MudText>
+            }
+            
+        </MudContainer>
+    }
+}
+
+
+@code {
+
+    [Inject] private ICreateCollaborativeRecipeUseCase CreateCollaborativeRecipeUseCase { get; set; } = null!;
+    [Inject] private IUpdateRecipeUseCase UpdateRecipeUseCase { get; set; } = null!;
+    [Inject] private IOriginalDish OriginalDish { get; set; } = null!;
+    [Inject] private ITwist TwistService { get; set; } = null!;
+
+    private List<CollaborationStep> CollaborationSteps { get; set; } = new List<CollaborationStep>();
+
+    private IEnumerable<OriginalDish> OriginalDishes { get; set; } = Array.Empty<OriginalDish>();
+    private IEnumerable<Twist> Twists { get; set; } = Array.Empty<Twist>();
+
+    private string OriginalDishId { get; set; } = string.Empty;
+    private string TwistId { get; set; } = string.Empty;
+
+    private async Task BuildDish()
+    {
+        var asyncEnumerable = CreateCollaborativeRecipeUseCase.CreateRecipeAsync(OriginalDishId, TwistId);
+        await foreach(var step in asyncEnumerable)
+        {
+            CollaborationSteps.Add(step);
+        }
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        OriginalDishes = OriginalDish.GetAll();
+        Twists = TwistService.GetAll();
+        return base.OnInitializedAsync();
+    }
+
+}

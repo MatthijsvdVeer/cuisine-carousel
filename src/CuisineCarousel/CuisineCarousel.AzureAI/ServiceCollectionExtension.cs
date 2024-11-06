@@ -17,13 +17,14 @@ public static class ServiceCollectionExtension
             .AddAzureOpenAIChatCompletion(ModelNames.Gpt35, config.ApiUrl, new DefaultAzureCredential(), apiVersion: "2024-08-01-preview", modelId: ModelNames.Gpt35);
 
         var kernelBuilder = services.AddKernel();
-        kernelBuilder.Plugins.AddClippyFunctions();
-
+        kernelBuilder.Plugins.AddPromptyFunctions();
+        
+        services.AddPromptyTemplates();
         services.AddTransient<IRecipe, RecipeService>();
         return services;
     }
 
-   private static IKernelBuilderPlugins AddClippyFunctions(this IKernelBuilderPlugins kernelPlugins)
+   private static IKernelBuilderPlugins AddPromptyFunctions(this IKernelBuilderPlugins kernelPlugins)
     {
         var functions = CreatePromptyFunctions().ToArray();
 
@@ -43,8 +44,25 @@ public static class ServiceCollectionExtension
     private static KernelFunction CreatePromptyFunction(string fileName)
     {
         var text = File.ReadAllText(fileName);
-#pragma warning disable SKEXP0040
         return KernelFunctionPrompty.FromPrompty(text);
-#pragma warning restore SKEXP0040
+    }
+    
+    private static IServiceCollection AddPromptyTemplates(this IServiceCollection services)
+    {
+        var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        var promptyDirectory = Path.Join(basePath, "Prompts");
+        foreach (var file in Directory.EnumerateFiles(promptyDirectory, "*.prompty"))
+        {
+            var promptTemplateConfig = CreatePromptyTemplateConfig(file);
+            services.AddKeyedSingleton(promptTemplateConfig.Name, promptTemplateConfig);
+        }
+        
+        return services;
+    }
+    
+    private static PromptTemplateConfig CreatePromptyTemplateConfig(string fileName)
+    {
+        var text = File.ReadAllText(fileName);
+        return KernelFunctionPrompty.ToPromptTemplateConfig(text);
     }
 }
