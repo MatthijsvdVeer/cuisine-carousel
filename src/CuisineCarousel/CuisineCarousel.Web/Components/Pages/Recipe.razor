@@ -64,6 +64,7 @@
     [Inject] private IUpdateRecipeUseCase UpdateRecipeUseCase { get; set; } = null!;
     [Inject] private IOriginalDish OriginalDish { get; set; } = null!;
     [Inject] private ITwist TwistService { get; set; } = null!;
+    [Inject] private IFabricator Fabricator { get; set; } = null!;
 
     private Models.Recipe? NewRecipe { get; set; }
     private Models.Recipe? UpdatedRecipe { get; set; }
@@ -85,9 +86,9 @@
         UpdatedRecipe = await UpdateRecipeUseCase.UpdateRecipeAsync(NewRecipe!, UpdateInstructions);
     }
 
-    private void GenerateImage()
+    private async Task GenerateImage()
     {
-        // generate an image for the new dish
+        await this.Fabricator.Fabricate(NewRecipe!);
     }
 
     protected override Task OnInitializedAsync()

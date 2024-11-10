@@ -131,7 +131,7 @@ resource contentFilter 'Microsoft.CognitiveServices/accounts/raiPolicies@2024-06
 
 resource dalle 'Microsoft.CognitiveServices/accounts/deployments@2024-06-01-preview' = {
   parent: openai
-  name: 'DALL-E3'
+  name: 'dall-e-3'
   sku: {
     name: 'Standard'
     capacity: 1

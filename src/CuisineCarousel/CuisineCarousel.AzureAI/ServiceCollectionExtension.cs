@@ -14,13 +14,15 @@ public static class ServiceCollectionExtension
         var config = OpenAiConfiguration.Get(configuration);
         services
             .AddAzureOpenAIChatCompletion(ModelNames.Gpt4o, config.ApiUrl, new DefaultAzureCredential(), apiVersion: "2024-08-01-preview", modelId: ModelNames.Gpt4o)
-            .AddAzureOpenAIChatCompletion(ModelNames.Gpt35, config.ApiUrl, new DefaultAzureCredential(), apiVersion: "2024-08-01-preview", modelId: ModelNames.Gpt35);
+            .AddAzureOpenAIChatCompletion(ModelNames.Gpt35, config.ApiUrl, new DefaultAzureCredential(), apiVersion: "2024-08-01-preview", modelId: ModelNames.Gpt35)
+            .AddAzureOpenAITextToImage("DALL-E", config.ApiUrl, new DefaultAzureCredential(), modelId: "DALL-E");
 
         var kernelBuilder = services.AddKernel();
         kernelBuilder.Plugins.AddPromptyFunctions();
         
         services.AddPromptyTemplates();
         services.AddTransient<IRecipe, RecipeService>();
+        services.AddTransient<IFabricator, ImageFabricator>();
         return services;
     }
 
