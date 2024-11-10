@@ -35,22 +35,10 @@
         <MudText Typo="Typo.body1" Class="mt-8">@NewRecipe.Description</MudText>
         <MudText Typo="Typo.body2" Class="mt-8">@NewRecipe.Instructions</MudText>
         <MudTextField Label="Instructions" Multiline="true" Rows="4" Variant="Variant.Filled" @bind-Value="UpdateInstructions"/>
-        <MudButton OnClick="() => UpdateDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Update Dish!</MudButton>
     </MudContainer>
 }
 
-
-@if (UpdatedRecipe != null)
-{
-    <MudContainer>
-        <MudText Typo="Typo.h4" Class="mt-8">Your updated recipe:</MudText>
-        <MudText Typo="Typo.h5" Class="mt-8">@UpdatedRecipe.Title</MudText>
-        <MudText Typo="Typo.body1" Class="mt-8">@UpdatedRecipe.Description</MudText>
-        <MudText Typo="Typo.body2" Class="mt-8">@UpdatedRecipe.Instructions</MudText>
-    </MudContainer>
-}
-
-@if (NewRecipe != null || UpdatedRecipe != null)
+@if (NewRecipe != null)
 {
     <MudContainer>
         <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
@@ -64,13 +52,11 @@
 @code {
 
     [Inject] private ICreateRecipeUseCase CreateRecipeUseCase { get; set; } = null!;
-    [Inject] private IUpdateRecipeUseCase UpdateRecipeUseCase { get; set; } = null!;
     [Inject] private IOriginalDish OriginalDish { get; set; } = null!;
     [Inject] private ITwist TwistService { get; set; } = null!;
     [Inject] private IFabricator Fabricator { get; set; } = null!;
 
     private Models.Recipe? NewRecipe { get; set; }
-    private Models.Recipe? UpdatedRecipe { get; set; }
 
     private IEnumerable<OriginalDish> OriginalDishes { get; set; } = Array.Empty<OriginalDish>();
     private IEnumerable<Twist> Twists { get; set; } = Array.Empty<Twist>();
@@ -84,11 +70,6 @@
     private async Task BuildDish()
     {
         NewRecipe = await CreateRecipeUseCase.CreateRecipeAsync(OriginalDishId, TwistId);
-    }
-
-    private async Task UpdateDish()
-    {
-        UpdatedRecipe = await UpdateRecipeUseCase.UpdateRecipeAsync(NewRecipe!, UpdateInstructions);
     }
 
     private async Task GenerateImage()

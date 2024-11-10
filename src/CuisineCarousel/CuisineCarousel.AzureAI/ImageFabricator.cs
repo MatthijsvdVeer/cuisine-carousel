@@ -3,22 +3,25 @@ using Azure;
 using Azure.AI.OpenAI;
 using Azure.Identity;
 using CuisineCarousel.Models;
+using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.TextToImage;
 using OpenAI.Images;
 
 namespace CuisineCarousel.AzureAI;
 
-internal sealed class ImageFabricator(ITextToImageService textToImageService) : IFabricator
+internal sealed class ImageFabricator(ITextToImageService textToImageService, Kernel kernel) : IFabricator
 {
     public async Task<Uri> Fabricate(Recipe recipe)
     {
-        // step 1 is to create the prompt with our new prompt creation function
-        var prompt =
-            "A picture of deep-fried pasta carbonara, served in a wicker basket. In the style of 1950 sci-fi retro comic book.";
-
-        // step 2 is to gen the image with that prompt
-        var image = await textToImageService.GenerateImageAsync(prompt, 1024, 1024);
-
+        var arguments = new KernelArguments
+        {
+            { "recipeTitle", recipe.Title },
+            { "recipeDescription", recipe.Description },
+            { "recipeInstructions", recipe.Instructions }
+        };
+        
+        var functionResult = await kernel.InvokeAsync(PluginNames.Prompty, FunctionNames.CreateImage, arguments);
+        var image = await textToImageService.GenerateImageAsync(functionResult.GetValue<string>(), 1024, 1024);
         return new(image);
     }
 }
