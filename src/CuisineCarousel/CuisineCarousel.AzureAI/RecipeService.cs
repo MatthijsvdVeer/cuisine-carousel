@@ -40,13 +40,6 @@ internal sealed class RecipeService(
         throw new InvalidOperationException("Failed to create recipe");
     }
 
-    public Task<Recipe> UpdateRecipeAsync(Recipe recipe, string instructions)
-    {
-        return Task.FromResult(new Recipe("The Holy Curry",
-            "This Japanese curry will make you feel like you're in Tokyo",
-            "1. Mix the curry paste with the sake\n2. Add the pork and prawns\n3. Simmer for 20 minutes"));
-    }
-
     public async IAsyncEnumerable<CollaborationStep> CollaborateOnRecipeAsync(string originalDishName,
         string originalDishDescription, string twist)
     {

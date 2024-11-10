@@ -9,7 +9,8 @@ internal sealed class TwistRepository : ITwist
         new("3", "Served In A Wicker Basket", "The dish must be served in a wicker basket."),
         new("4", "Served On A Stick", "The dish must be served on a stick."),
         new("5", "Served In A Coconut", "The dish must be served in a coconut."),
-        new("6", "Potatoes only", "Every ingredient in the dish must be a potato.")
+        new("6", "Potatoes only", "Every ingredient in the dish must be a potato."),
+        new("7", "The dish must resemble a famous landmark", "The dish must resemble a famous landmark."),
     ];
     
     public Twist GetById(string id)

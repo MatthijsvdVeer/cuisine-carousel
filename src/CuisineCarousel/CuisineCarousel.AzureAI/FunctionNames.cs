@@ -7,4 +7,6 @@ internal static class FunctionNames
     public const string GordonRamsAI = "GordonRamsAI";
     
     public const string ChatManager = "ChatManager";
+    
+    public const string CreateImage = "CreateImage";
 }

@@ -48,14 +48,27 @@
     }
 }
 
+@if (LatestRecipe != null)
+{
+<MudContainer>
+    <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
+    @if(ImageUri != null)
+    {
+    <MudImage Src="@ImageUri.ToString()"></MudImage>
+    }
+</MudContainer>
+}
+
 
 @code {
 
     [Inject] private ICreateCollaborativeRecipeUseCase CreateCollaborativeRecipeUseCase { get; set; } = null!;
-    [Inject] private IUpdateRecipeUseCase UpdateRecipeUseCase { get; set; } = null!;
     [Inject] private IOriginalDish OriginalDish { get; set; } = null!;
     [Inject] private ITwist TwistService { get; set; } = null!;
+    [Inject] private IFabricator Fabricator { get; set; } = null!;
 
+    private Models.Recipe? LatestRecipe { get; set; }  
+    
     private List<CollaborationStep> CollaborationSteps { get; set; } = new List<CollaborationStep>();
 
     private IEnumerable<OriginalDish> OriginalDishes { get; set; } = Array.Empty<OriginalDish>();
@@ -63,15 +76,25 @@
 
     private string OriginalDishId { get; set; } = string.Empty;
     private string TwistId { get; set; } = string.Empty;
+    private Uri? ImageUri { get; set; }
 
     private async Task BuildDish()
     {
         var asyncEnumerable = CreateCollaborativeRecipeUseCase.CreateRecipeAsync(OriginalDishId, TwistId);
         await foreach(var step in asyncEnumerable)
         {
+            if (step.Recipe != null)
+            {
+                LatestRecipe = step.Recipe;
+            }
             CollaborationSteps.Add(step);
             StateHasChanged(); // Ensure UI is updated after each step is added
         }
+    }
+
+    private async Task GenerateImage()
+    {
+        ImageUri = await this.Fabricator.Fabricate(LatestRecipe!);
     }
 
     protected override Task OnInitializedAsync()

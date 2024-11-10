@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <NoWarn>SKEXP0001;SKEXP0110;SKEXP0040</NoWarn>
+        <NoWarn>SKEXP0001;SKEXP0010;SKEXP0110;SKEXP0040</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -19,6 +19,9 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Prompts\ChatManager.prompty">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Prompts\CreateImage.prompty">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>

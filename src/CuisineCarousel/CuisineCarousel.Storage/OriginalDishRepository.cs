@@ -11,7 +11,8 @@ internal sealed class OriginalDishRepository : IOriginalDish
         new("3", "Beef Wellington", "A beef fillet coated with pâté and duxelles, which is then wrapped in puff pastry."),
         new("4", "Sushi", "A dish of vinegared rice topped with raw fish or other ingredients."),
         new ("5", "Pad Thai", "A stir-fried rice noodle dish commonly served as a street food and at casual local eateries in Thailand."),
-        new ("6", "Tacos", "A traditional Mexican dish consisting of a corn or wheat tortilla folded or rolled around a filling.")
+        new ("6", "Tacos", "A traditional Mexican dish consisting of a corn or wheat tortilla folded or rolled around a filling."),
+        new ("7", "Cepelinai", "A traditional Lithuanian dish made from grated and riced potatoes and usually stuffed with ground meat.")
     ];
     
     public OriginalDish GetById(string id)

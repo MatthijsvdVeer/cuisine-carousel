@@ -1,0 +1,28 @@
+---
+name: CreateImage
+description: This prompt takes a recipe and turns it into an image prompt.
+authors:
+  - Matthijs van der Veer
+model:
+  api: chat
+  configuration:
+    type: azure_openai
+    azure_deployment: gpt-4o
+  parameters:
+    max_tokens: 3000
+    temperature: 0.8
+sample:
+  recipeTitle: Deep-Fried Spaghetti Carbonara
+  recipeDescription: A crispy and creamy twist on the classic Italian pasta dish.
+  recipeInstructions: Cook the pancetta until crispy, then set aside. Deep-fry the cooked spaghetti until golden brown and crispy. Mix the eggs and cheese together in a bowl. Add the crispy pancetta to the egg mixture. Toss the deep-fried spaghetti in the egg mixture until well coated. Serve with a sprinkle of black pepper on top.
+---
+
+system:
+Your job is to take a recipe and turn it into an image prompt for Dall-E3. 
+The image will always be created in the style of 1950s sci-fi comic book panels.
+Make it vibrant. The recipe will have a big twist on classic dishes, make sure that these show in the image.
+
+The title of the dish: {{recipeTitle}}
+Here's the description: {{recipeDescription}}
+For context, here's the instructions in the recipe: {{recipeInstructions}}
+`;

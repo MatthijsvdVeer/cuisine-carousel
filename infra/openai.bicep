@@ -20,7 +20,7 @@ resource openai 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
     networkAcls: {
       defaultAction: 'Allow'
     }
-    disableLocalAuth: true
+    disableLocalAuth: false
     customSubDomainName: 'oai-${workloadName}-${openAiShortHand}'
   }
 }
@@ -128,6 +128,27 @@ resource contentFilter 'Microsoft.CognitiveServices/accounts/raiPolicies@2024-06
     ]
   }
 }
+
+/*
+resource dalle 'Microsoft.CognitiveServices/accounts/deployments@2024-06-01-preview' = {
+  parent: openai
+  name: 'dall-e-3'
+  sku: {
+    name: 'Standard'
+    capacity: 1
+  }
+  properties: {
+    model: {
+      format: 'OpenAI'
+      name: 'dall-e-3'
+      version: ' 3.0' 
+    }
+    versionUpgradeOption: 'OnceNewDefaultVersionAvailable'
+    currentCapacity: 1
+    raiPolicyName: 'Microsoft.DefaultV2'
+  }
+}
+*/
 
 resource monitoringReaderRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   scope: subscription()
