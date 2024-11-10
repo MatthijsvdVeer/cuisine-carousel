@@ -70,6 +70,7 @@
         await foreach(var step in asyncEnumerable)
         {
             CollaborationSteps.Add(step);
+            StateHasChanged(); // Ensure UI is updated after each step is added
         }
     }
 
