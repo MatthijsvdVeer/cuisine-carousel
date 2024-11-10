@@ -2,7 +2,7 @@
 @attribute [StreamRendering]
 @using CuisineCarousel.Models
 @using CuisineCarousel.UseCases
-<h3>Recipe</h3>
+<h3>Fabricate Food</h3>
 <MudContainer>
     <MudGrid>
         <MudItem xs="6">
@@ -53,8 +53,11 @@
 @if (NewRecipe != null || UpdatedRecipe != null)
 {
     <MudContainer>
-        <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Generate Image!</MudButton>
-        <MudImage Src=""></MudImage>
+        <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
+        @if(ImageUri != null)
+        {
+            <MudImage Src="@ImageUri.ToString()"></MudImage>
+        }
     </MudContainer>
 }
 
@@ -75,6 +78,8 @@
     private string UpdateInstructions { get; set; } = string.Empty;
     private string OriginalDishId { get; set; } = string.Empty;
     private string TwistId { get; set; } = string.Empty;
+    
+    private Uri? ImageUri { get; set; }
 
     private async Task BuildDish()
     {
@@ -88,7 +93,7 @@
 
     private async Task GenerateImage()
     {
-        await this.Fabricator.Fabricate(NewRecipe!);
+        ImageUri = await this.Fabricator.Fabricate(NewRecipe!);
     }
 
     protected override Task OnInitializedAsync()
