@@ -129,6 +129,25 @@ resource contentFilter 'Microsoft.CognitiveServices/accounts/raiPolicies@2024-06
   }
 }
 
+resource dalle 'Microsoft.CognitiveServices/accounts/deployments@2024-06-01-preview' = {
+  parent: openai
+  name: 'DALL-E3'
+  sku: {
+    name: 'Standard'
+    capacity: 1
+  }
+  properties: {
+    model: {
+      format: 'OpenAI'
+      name: 'dall-e-3'
+      version: ' 3.0' 
+    }
+    versionUpgradeOption: 'OnceNewDefaultVersionAvailable'
+    currentCapacity: 1
+    raiPolicyName: 'Microsoft.DefaultV2'
+  }
+}
+
 resource monitoringReaderRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   scope: subscription()
   name: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd' // Cognitive Services OpenAI User
