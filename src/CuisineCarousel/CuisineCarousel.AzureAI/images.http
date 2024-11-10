@@ -1,0 +1,27 @@
+﻿POST https://oai-mv-sandbox.openai.azure.com/openai/deployments/Dalle3/images/generations?api-version=2024-06-01
+
+Content-Type: application/json
+api-key: nope
+
+{
+    "prompt": "A multi-colored umbrella on the beach, disposable camera",
+    "size": "1024x1024", 
+    "n": 1,
+    "quality": "hd", 
+    "style": "vivid"
+}
+
+###18
+
+POST https://oai-cuisine-swe.openai.azure.com/openai/deployments/dall-e-3/images/generations?api-version=2024-04-01-preview
+
+Content-Type: application/json
+api-key: nope
+
+{
+    "prompt": "A multi-colored umbrella on the beach, disposable camera",
+    "size": "1024x1024", 
+    "n": 1,
+    "quality": "hd", 
+    "style": "vivid"
+}

@@ -20,7 +20,7 @@ resource openai 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
     networkAcls: {
       defaultAction: 'Allow'
     }
-    disableLocalAuth: true
+    disableLocalAuth: false
     customSubDomainName: 'oai-${workloadName}-${openAiShortHand}'
   }
 }

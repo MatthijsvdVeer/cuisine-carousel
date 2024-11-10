@@ -15,7 +15,7 @@ public static class ServiceCollectionExtension
         services
             .AddAzureOpenAIChatCompletion(ModelNames.Gpt4o, config.ApiUrl, new DefaultAzureCredential(), apiVersion: "2024-08-01-preview", modelId: ModelNames.Gpt4o)
             .AddAzureOpenAIChatCompletion(ModelNames.Gpt35, config.ApiUrl, new DefaultAzureCredential(), apiVersion: "2024-08-01-preview", modelId: ModelNames.Gpt35)
-            .AddAzureOpenAITextToImage("dall-e-3", config.ApiUrl, new DefaultAzureCredential(), modelId: "dall-e-3");
+            .AddAzureOpenAITextToImage("dall-e-3", config.ApiUrl, new DefaultAzureCredential(), apiVersion: "2024-06-01", modelId: "dall-e-3");
 
         var kernelBuilder = services.AddKernel();
         kernelBuilder.Plugins.AddPromptyFunctions();
