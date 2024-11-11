@@ -29,10 +29,30 @@
 
 @if (CollaborationSteps.Any())
 {
-    @foreach(var step in CollaborationSteps)
+    @foreach (var step in CollaborationSteps)
     {
+        @if (step.Author == "ChatManager")
+        {
+            continue;
+        }
+
         <MudContainer>
-            <MudText Typo="Typo.h5" Class="mt-8">@step.Author</MudText>
+            <MudStack Row="true">
+                <MudBadge Color="Color.Success" Overlap="true" Bordered="true">
+                    <MudAvatar Size="Size.Medium">
+                        @if(step.Author == "CreateRecipe")
+                        {
+                            <MudImage Src="Chef.webp"></MudImage>
+                        }
+                        else
+                        {
+                            <MudImage Src="GordonRamsAI.webp"></MudImage>
+                        }
+                    </MudAvatar>
+                </MudBadge>
+                <MudText Typo="Typo.h5" Class="mt-8">@step.Author</MudText>
+
+            </MudStack>
             @if (step.Recipe != null)
             {
                 <MudText Typo="Typo.h5" Class="mt-8">@step.Recipe.Title</MudText>
@@ -46,20 +66,20 @@
             {
                 <MudText Typo="Typo.body2" Class="mt-8">@step.Message</MudText>
             }
-            
+
         </MudContainer>
     }
 }
 
 @if (LatestRecipe != null)
 {
-<MudContainer>
-    <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
-    @if(ImageUri != null)
-    {
-    <MudImage Src="@ImageUri.ToString()"></MudImage>
-    }
-</MudContainer>
+    <MudContainer>
+        <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
+        @if (ImageUri != null)
+        {
+            <MudImage Src="@ImageUri.ToString()"></MudImage>
+        }
+    </MudContainer>
 }
 
 
@@ -70,8 +90,8 @@
     [Inject] private ITwist TwistService { get; set; } = null!;
     [Inject] private IFabricator Fabricator { get; set; } = null!;
 
-    private Models.Recipe? LatestRecipe { get; set; }  
-    
+    private Models.Recipe? LatestRecipe { get; set; }
+
     private List<CollaborationStep> CollaborationSteps { get; set; } = new List<CollaborationStep>();
 
     private IEnumerable<OriginalDish> OriginalDishes { get; set; } = Array.Empty<OriginalDish>();
@@ -85,12 +105,13 @@
     private async Task BuildDish()
     {
         var asyncEnumerable = CreateCollaborativeRecipeUseCase.CreateRecipeAsync(OriginalDishId, TwistId);
-        await foreach(var step in asyncEnumerable)
+        await foreach (var step in asyncEnumerable)
         {
             if (step.Recipe != null)
             {
                 LatestRecipe = step.Recipe;
             }
+
             CollaborationSteps.Add(step);
             StateHasChanged(); // Ensure UI is updated after each step is added
         }
@@ -108,7 +129,8 @@
         return base.OnInitializedAsync();
     }
 
-    private void OnExpandCollapseClick() {
+    private void OnExpandCollapseClick()
+    {
         Expanded = !Expanded;
     }
 

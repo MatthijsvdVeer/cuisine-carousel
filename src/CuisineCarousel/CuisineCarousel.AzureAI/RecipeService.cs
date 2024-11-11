@@ -29,15 +29,9 @@ internal sealed class RecipeService(
         };
 
         var functionResult = await kernel.InvokeAsync(PluginNames.Prompty, FunctionNames.CreateRecipe, arguments);
-        var recipeString = functionResult.GetValue<string>();
-        var recipe = JsonSerializer.Deserialize<Recipe>(recipeString!,
+        var recipe = JsonSerializer.Deserialize<Recipe>(functionResult.GetValue<string>()!,
             JsonSerializerOptions);
-        if (recipe != null)
-        {
-            return recipe;
-        }
-
-        throw new InvalidOperationException("Failed to create recipe");
+        return recipe ?? throw new InvalidOperationException("Failed to create recipe");
     }
 
     public async IAsyncEnumerable<CollaborationStep> CollaborateOnRecipeAsync(string originalDishName,
