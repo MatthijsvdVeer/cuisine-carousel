@@ -80,3 +80,4 @@ jobs:
             --name ${{ needs.deploy-infra.outputs.appServiceName }} \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
             --settings CUISINE_CAROUSEL_OPENAI_URL=${{ needs.deploy-infra.outputs.openAiEndpoint }}
+          az webapp restart --name ${{ needs.deploy-infra.outputs.appServiceName }} --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
