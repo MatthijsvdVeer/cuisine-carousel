@@ -61,6 +61,11 @@ resource mini 'Microsoft.CognitiveServices/accounts/deployments@2024-06-01-previ
     currentCapacity: 1
     raiPolicyName: 'Microsoft.DefaultV2'
   }
+  // Forcing sequential deployment to avoid multiple operations on the parent resource.
+  // It would result in a RequestConflict
+  dependsOn: [
+    model
+  ]
 }
 
 resource contentFilter 'Microsoft.CognitiveServices/accounts/raiPolicies@2024-06-01-preview' = {
