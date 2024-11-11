@@ -8,6 +8,6 @@ internal sealed class CreateCollaborativeRecipeUseCase(IOriginalDish originalDis
     {
         var foundDish = originalDish.GetById(originalDishId);
         var foundTwist = twist.GetById(twistId);
-        return recipe.CollaborateOnRecipeAsync(foundDish.Name, foundDish.Description, foundTwist.Name);
+        return recipe.CollaborateOnRecipeAsync(foundDish.Name, foundDish.Description, foundTwist.Description);
     }
 }
