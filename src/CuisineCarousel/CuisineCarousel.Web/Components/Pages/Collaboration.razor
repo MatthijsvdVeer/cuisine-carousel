@@ -37,7 +37,10 @@
             {
                 <MudText Typo="Typo.h5" Class="mt-8">@step.Recipe.Title</MudText>
                 <MudText Typo="Typo.body1" Class="mt-8">@step.Recipe.Description</MudText>
-                <MudText Typo="Typo.body2" Class="mt-8">@step.Recipe.Instructions</MudText>
+                <MudButton OnClick="OnExpandCollapseClick">@(Expanded ? "Collapse" : "Expand")</MudButton>
+                <MudCollapse Expanded="Expanded">
+                    <MudText Typo="Typo.body2" Class="mt-8">@step.Recipe.Instructions</MudText>
+                </MudCollapse>
             }
             else
             {
@@ -77,6 +80,7 @@
     private string OriginalDishId { get; set; } = string.Empty;
     private string TwistId { get; set; } = string.Empty;
     private Uri? ImageUri { get; set; }
+    private bool Expanded { get; set; }
 
     private async Task BuildDish()
     {
@@ -102,6 +106,10 @@
         OriginalDishes = OriginalDish.GetAll();
         Twists = TwistService.GetAll();
         return base.OnInitializedAsync();
+    }
+
+    private void OnExpandCollapseClick() {
+        Expanded = !Expanded;
     }
 
 }

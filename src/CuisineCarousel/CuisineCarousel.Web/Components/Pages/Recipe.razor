@@ -33,8 +33,10 @@
         <MudText Typo="Typo.h4" Class="mt-8">Your new recipe:</MudText>
         <MudText Typo="Typo.h5" Class="mt-8">@NewRecipe.Title</MudText>
         <MudText Typo="Typo.body1" Class="mt-8">@NewRecipe.Description</MudText>
-        <MudText Typo="Typo.body2" Class="mt-8">@NewRecipe.Instructions</MudText>
-        <MudTextField Label="Instructions" Multiline="true" Rows="4" Variant="Variant.Filled" @bind-Value="UpdateInstructions"/>
+        <MudButton OnClick="OnExpandCollapseClick">@(Expanded ? "Collapse" : "Expand")</MudButton>
+        <MudCollapse Expanded="Expanded">
+            <MudText Typo="Typo.body2" Class="mt-8">@NewRecipe.Instructions</MudText>
+        </MudCollapse>
     </MudContainer>
 }
 
@@ -61,11 +63,11 @@
     private IEnumerable<OriginalDish> OriginalDishes { get; set; } = Array.Empty<OriginalDish>();
     private IEnumerable<Twist> Twists { get; set; } = Array.Empty<Twist>();
 
-    private string UpdateInstructions { get; set; } = string.Empty;
     private string OriginalDishId { get; set; } = string.Empty;
     private string TwistId { get; set; } = string.Empty;
     
     private Uri? ImageUri { get; set; }
+    private bool Expanded { get; set; }
 
     private async Task BuildDish()
     {
@@ -84,4 +86,7 @@
         return base.OnInitializedAsync();
     }
 
+    private void OnExpandCollapseClick() {
+        Expanded = !Expanded;
+    }
 }

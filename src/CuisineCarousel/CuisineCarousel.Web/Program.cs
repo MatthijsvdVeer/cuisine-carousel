@@ -13,7 +13,6 @@ builder.AddOpenTelemetry("cuisine-carousel");
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddMudServices();
-
 builder.Services
     .AddDomain()
     .AddStorage()
