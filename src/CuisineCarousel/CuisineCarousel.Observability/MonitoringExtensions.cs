@@ -41,8 +41,7 @@ public static class MonitoringExtensions
             {
                 _ = tracing.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddSource("Microsoft.SemanticKernel*")
-                    .AddSource();
+                    .AddSource("Microsoft.SemanticKernel*");
             });
             
         _ = builder.AddOpenTelemetryExporters();
