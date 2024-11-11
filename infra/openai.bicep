@@ -44,6 +44,25 @@ resource model 'Microsoft.CognitiveServices/accounts/deployments@2024-06-01-prev
   }
 }
 
+resource mini 'Microsoft.CognitiveServices/accounts/deployments@2024-06-01-preview' = {
+  parent: openai
+  name: 'gpt-4o-mini'
+  sku: {
+    name: 'GlobalStandard'
+    capacity: 1000
+  }
+  properties: {
+    model: {
+      format: 'OpenAI'
+      name: 'gpt-4o-mini'
+      version: '2024-07-18'
+    }
+    versionUpgradeOption: 'OnceNewDefaultVersionAvailable'
+    currentCapacity: 1
+    raiPolicyName: 'Microsoft.DefaultV2'
+  }
+}
+
 resource contentFilter 'Microsoft.CognitiveServices/accounts/raiPolicies@2024-06-01-preview' = {
   parent: openai
   name: 'cuisine-filter'
