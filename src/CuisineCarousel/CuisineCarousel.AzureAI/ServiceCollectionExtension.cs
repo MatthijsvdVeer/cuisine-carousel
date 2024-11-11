@@ -56,6 +56,8 @@ public static class ServiceCollectionExtension
         return KernelFunctionPrompty.FromPrompty(text, loggerFactory: factory);
     }
     
+    
+    #region Experimental
     private static IServiceCollection AddPromptyTemplates(this IServiceCollection services)
     {
         var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -74,4 +76,5 @@ public static class ServiceCollectionExtension
         var text = File.ReadAllText(fileName);
         return KernelFunctionPrompty.ToPromptTemplateConfig(text);
     }
+    #endregion
 }
