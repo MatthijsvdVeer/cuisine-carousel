@@ -1,6 +1,6 @@
 ﻿using CuisineCarousel.Models;
 
-namespace CuisineCarousel.AzureAI;
+namespace CuisineCarousel;
 
 internal sealed class OfflineFabricator : IFabricator
 {
