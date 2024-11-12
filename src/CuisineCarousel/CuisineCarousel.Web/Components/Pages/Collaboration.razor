@@ -42,7 +42,7 @@
         {
             continue;
         }
-        <MudContaine class=@GetContainerClass(step.Author)>
+        <MudContainer class=@GetContainerClass(step.Author)>
             <MudStack  AlignItems="AlignItems.End" Justify="Justify.FlexStart" Row="true">
                 <MudBadge Color="Color.Success" Overlap="true" Bordered="true">
                     <MudAvatar Size="Size.Medium">
@@ -73,7 +73,7 @@
                 <MudText Typo="Typo.body2" Class="mt-8">@step.Message</MudText>
             }
 
-        </MudContaine>
+        </MudContainer>
     }
 }
 
@@ -98,7 +98,7 @@
 
     private Models.Recipe? LatestRecipe { get; set; }
 
-    private List<CollaborationStep> CollaborationSteps { get; set; } = new List<CollaborationStep>();
+    private List<CollaborationStep> CollaborationSteps { get; set; } = new();
 
     private IEnumerable<OriginalDish> OriginalDishes { get; set; } = Array.Empty<OriginalDish>();
     private IEnumerable<Twist> Twists { get; set; } = Array.Empty<Twist>();
