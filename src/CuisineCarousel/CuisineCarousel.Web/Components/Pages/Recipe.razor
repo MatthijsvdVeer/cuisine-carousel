@@ -2,7 +2,10 @@
 @attribute [StreamRendering]
 @using CuisineCarousel.Models
 @using CuisineCarousel.UseCases
+@using MudExtensions
 <h3>Fabricate Food</h3>
+<FadeInAnimation />
+
 <MudContainer>
     <MudGrid>
         <MudItem xs="6">
@@ -21,15 +24,18 @@
                 }
             </MudSelect>
         </MudItem>
-        <MudItem xs="12">
-            <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
-        </MudItem>
+        @if (!GeneratingRecipe && NewRecipe == null)
+        {
+            <MudItem xs="12">
+                <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
+            </MudItem>
+        }
     </MudGrid>
 </MudContainer>
 
 @if (NewRecipe != null)
 {
-    <MudContainer>
+    <MudContainer Class="fade-in">
         <MudText Typo="Typo.h4" Class="mt-8">Your new recipe:</MudText>
         <MudText Typo="Typo.h5" Class="mt-8">@NewRecipe.Title</MudText>
         <MudText Typo="Typo.body1" Class="mt-8">@NewRecipe.Description</MudText>
@@ -44,7 +50,7 @@
 {
     <MudContainer>
         <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
-        @if(ImageUri != null)
+        @if (ImageUri != null)
         {
             <MudImage Src="@ImageUri.ToString()"></MudImage>
         }
@@ -68,10 +74,13 @@
     
     private Uri? ImageUri { get; set; }
     private bool Expanded { get; set; }
+    private bool GeneratingRecipe { get; set; }
 
     private async Task BuildDish()
     {
+        GeneratingRecipe = true;
         NewRecipe = await CreateRecipeUseCase.CreateRecipeAsync(OriginalDishId, TwistId);
+        GeneratingRecipe = false;
     }
 
     private async Task GenerateImage()
