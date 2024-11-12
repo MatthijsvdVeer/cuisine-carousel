@@ -27,7 +27,8 @@ public static class ServiceCollectionExtension
         var kernelBuilder = services.AddKernel();
         kernelBuilder.Plugins.AddPromptyFunctions(loggerFactory);
         services.AddPromptyTemplates();
-        services.AddTransient<IRecipe, RecipeService>();
+        // services.AddTransient<IRecipe, RecipeService>();
+        services.AddTransient<IRecipe, OfflineRecipeService>();
         services.AddTransient<IFabricator, ImageFabricator>();
         return services;
     }
