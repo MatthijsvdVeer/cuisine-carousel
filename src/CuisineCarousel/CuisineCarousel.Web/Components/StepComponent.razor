@@ -1,0 +1,35 @@
+﻿@using CuisineCarousel.Models
+<MudPaper Outlined="true" Class="fade-in mt-4">
+    <MudStack AlignItems="AlignItems.End" Justify="Justify.FlexStart" Row="true">
+        <MudBadge Color="Color.Success" Overlap="true" Bordered="true" Class="mt-4">
+            <MudAvatar Size="Size.Medium">
+                <MudImage Src="@GetImageSource()"></MudImage>
+            </MudAvatar>
+        </MudBadge>
+        <MudText Typo="Typo.h5" Class="">@CollaborationStep.Author</MudText>
+
+    </MudStack>
+    @if (CollaborationStep.Recipe != null)
+    {
+        <RecipeComponent Recipe="CollaborationStep.Recipe"/>
+        
+    }
+    else
+    {
+        <MudText Typo="Typo.body1" Class="">@CollaborationStep.Message</MudText>
+    }
+</MudPaper>
+
+@code {
+    [Parameter] public CollaborationStep CollaborationStep { get; set; }
+
+    private string GetImageSource()
+    {
+        return CollaborationStep.Author switch
+        {
+            "CreateRecipe" => "CreateRecipe.webp",
+            "GordonRamsAI" => "GordonRamsAI.webp",
+            _ => string.Empty
+        };
+    }
+}

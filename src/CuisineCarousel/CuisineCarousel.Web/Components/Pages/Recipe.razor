@@ -2,7 +2,10 @@
 @attribute [StreamRendering]
 @using CuisineCarousel.Models
 @using CuisineCarousel.UseCases
+@using MudExtensions
 <h3>Fabricate Food</h3>
+<FadeInAnimation/>
+
 <MudContainer>
     <MudGrid>
         <MudItem xs="6">
@@ -21,33 +24,46 @@
                 }
             </MudSelect>
         </MudItem>
-        <MudItem xs="12">
-            <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
-        </MudItem>
+        @if (!GeneratingRecipe && NewRecipe == null)
+        {
+            <MudItem xs="12">
+                <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Row="true">
+                    <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
+                </MudStack>
+            </MudItem>
+        }
     </MudGrid>
 </MudContainer>
 
 @if (NewRecipe != null)
 {
-    <MudContainer>
-        <MudText Typo="Typo.h4" Class="mt-8">Your new recipe:</MudText>
-        <MudText Typo="Typo.h5" Class="mt-8">@NewRecipe.Title</MudText>
-        <MudText Typo="Typo.body1" Class="mt-8">@NewRecipe.Description</MudText>
-        <MudButton OnClick="OnExpandCollapseClick">@(Expanded ? "Collapse" : "Expand")</MudButton>
-        <MudCollapse Expanded="Expanded">
-            <MudText Typo="Typo.body2" Class="mt-8">@NewRecipe.Instructions</MudText>
-        </MudCollapse>
+    <MudContainer Class="fade-in">
+        <MudPaper Outlined="true">
+            <MudText Typo="Typo.h4" Class="mt-8">Your new recipe:</MudText>
+            <RecipeComponent Recipe="NewRecipe"/>
+        </MudPaper>
     </MudContainer>
 }
 
 @if (NewRecipe != null)
 {
-    <MudContainer>
-        <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
-        @if(ImageUri != null)
-        {
-            <MudImage Src="@ImageUri.ToString()"></MudImage>
-        }
+    <MudContainer Class="mt-4">
+        <MudGrid>
+            @if(GeneratingImage == false && ImageUri == null)
+            {
+                <MudItem xs="12">
+                    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Row="true">
+                        <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
+                    </MudStack>
+                </MudItem>
+            }
+            @if (ImageUri != null)
+            {
+                <MudItem xs="12">
+                    <MudImage Fluid="true" Src="@ImageUri.ToString()"></MudImage>
+                </MudItem>
+            }
+        </MudGrid>
     </MudContainer>
 }
 
@@ -65,18 +81,23 @@
 
     private string OriginalDishId { get; set; } = string.Empty;
     private string TwistId { get; set; } = string.Empty;
-    
+
     private Uri? ImageUri { get; set; }
-    private bool Expanded { get; set; }
+    private bool GeneratingRecipe { get; set; }
+    private bool GeneratingImage { get; set; }
 
     private async Task BuildDish()
     {
+        GeneratingRecipe = true;
         NewRecipe = await CreateRecipeUseCase.CreateRecipeAsync(OriginalDishId, TwistId);
+        GeneratingRecipe = false;
     }
 
     private async Task GenerateImage()
     {
-        ImageUri = await this.Fabricator.Fabricate(NewRecipe!);
+        GeneratingImage = true;
+        ImageUri = await Fabricator.Fabricate(NewRecipe!);
+        GeneratingImage = false;
     }
 
     protected override Task OnInitializedAsync()
@@ -86,7 +107,4 @@
         return base.OnInitializedAsync();
     }
 
-    private void OnExpandCollapseClick() {
-        Expanded = !Expanded;
-    }
 }

@@ -2,7 +2,9 @@
 @attribute [StreamRendering]
 @using CuisineCarousel.Models
 @using CuisineCarousel.UseCases
-<h3>Recipe</h3>
+
+<FadeInAnimation/>
+
 <MudContainer>
     <MudGrid>
         <MudItem xs="6">
@@ -21,9 +23,14 @@
                 }
             </MudSelect>
         </MudItem>
-        <MudItem xs="12">
-            <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
-        </MudItem>
+        @if (!GeneratingRecipe && !CollaborationSteps.Any())
+        {
+            <MudItem xs="12">
+                <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Row="true">
+                    <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
+                </MudStack>
+            </MudItem>
+        }
     </MudGrid>
 </MudContainer>
 
@@ -36,52 +43,31 @@
             continue;
         }
 
-        <MudContainer>
-            <MudStack Row="true">
-                <MudBadge Color="Color.Success" Overlap="true" Bordered="true">
-                    <MudAvatar Size="Size.Medium">
-                        @if(step.Author == "CreateRecipe")
-                        {
-                            <MudImage Src="Chef.webp"></MudImage>
-                        }
-                        else
-                        {
-                            <MudImage Src="GordonRamsAI.webp"></MudImage>
-                        }
-                    </MudAvatar>
-                </MudBadge>
-                <MudText Typo="Typo.h5" Class="mt-8">@step.Author</MudText>
-
-            </MudStack>
-            @if (step.Recipe != null)
-            {
-                <MudText Typo="Typo.h5" Class="mt-8">@step.Recipe.Title</MudText>
-                <MudText Typo="Typo.body1" Class="mt-8">@step.Recipe.Description</MudText>
-                <MudButton OnClick="OnExpandCollapseClick">@(Expanded ? "Collapse" : "Expand")</MudButton>
-                <MudCollapse Expanded="Expanded">
-                    <MudText Typo="Typo.body2" Class="mt-8">@step.Recipe.Instructions</MudText>
-                </MudCollapse>
-            }
-            else
-            {
-                <MudText Typo="Typo.body2" Class="mt-8">@step.Message</MudText>
-            }
-
-        </MudContainer>
+        <StepComponent CollaborationStep="step"/>
     }
 }
 
-@if (LatestRecipe != null)
+@if (LatestRecipe != null && !GeneratingRecipe)
 {
-    <MudContainer>
-        <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
-        @if (ImageUri != null)
-        {
-            <MudImage Src="@ImageUri.ToString()"></MudImage>
-        }
+    <MudContainer Class="mt-4">
+        <MudGrid>
+            @if(GeneratingImage == false && ImageUri == null)
+            {
+            <MudItem xs="12">
+                <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Row="true">
+                    <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
+                </MudStack>
+            </MudItem>
+            }
+            @if (ImageUri != null)
+            {
+            <MudItem xs="12">
+                <MudImage Fluid="true" Src="@ImageUri.ToString()"></MudImage>
+            </MudItem>
+            }
+        </MudGrid>
     </MudContainer>
 }
-
 
 @code {
 
@@ -92,7 +78,7 @@
 
     private Models.Recipe? LatestRecipe { get; set; }
 
-    private List<CollaborationStep> CollaborationSteps { get; set; } = new List<CollaborationStep>();
+    private List<CollaborationStep> CollaborationSteps { get; set; } = new();
 
     private IEnumerable<OriginalDish> OriginalDishes { get; set; } = Array.Empty<OriginalDish>();
     private IEnumerable<Twist> Twists { get; set; } = Array.Empty<Twist>();
@@ -100,10 +86,12 @@
     private string OriginalDishId { get; set; } = string.Empty;
     private string TwistId { get; set; } = string.Empty;
     private Uri? ImageUri { get; set; }
-    private bool Expanded { get; set; }
+    private bool GeneratingRecipe { get; set; }
+    private bool GeneratingImage { get; set; }
 
     private async Task BuildDish()
     {
+        GeneratingRecipe = true;
         var asyncEnumerable = CreateCollaborativeRecipeUseCase.CreateRecipeAsync(OriginalDishId, TwistId);
         await foreach (var step in asyncEnumerable)
         {
@@ -114,12 +102,17 @@
 
             CollaborationSteps.Add(step);
             StateHasChanged(); // Ensure UI is updated after each step is added
+            // Todo: scroll to bottom.
         }
+
+        GeneratingRecipe = false;
     }
 
     private async Task GenerateImage()
     {
+        GeneratingImage = true;
         ImageUri = await this.Fabricator.Fabricate(LatestRecipe!);
+        GeneratingImage = false;
     }
 
     protected override Task OnInitializedAsync()
@@ -127,11 +120,6 @@
         OriginalDishes = OriginalDish.GetAll();
         Twists = TwistService.GetAll();
         return base.OnInitializedAsync();
-    }
-
-    private void OnExpandCollapseClick()
-    {
-        Expanded = !Expanded;
     }
 
 }
