@@ -1,0 +1,18 @@
+﻿@using CuisineCarousel.Models
+<MudText Typo="Typo.h5" Class="">@Recipe.Title</MudText>
+<MudText Typo="Typo.body1" Class="">@Recipe.Description</MudText>
+<MudButton OnClick="OnExpandCollapseClick">@(Expanded ? "Hide Instruction" : "See Instructions")</MudButton>
+<MudCollapse Expanded="Expanded">
+    <MudText Typo="Typo.body2" Class="mt-8">@Recipe.Instructions</MudText>
+</MudCollapse>
+
+@code {
+    [Parameter] public Recipe Recipe { get; set; }
+    
+    private bool Expanded { get; set; }
+
+    private void OnExpandCollapseClick()
+    {
+        Expanded = !Expanded;
+    }
+}

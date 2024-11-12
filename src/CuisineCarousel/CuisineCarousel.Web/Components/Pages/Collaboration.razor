@@ -2,11 +2,9 @@
 @attribute [StreamRendering]
 @using CuisineCarousel.Models
 @using CuisineCarousel.UseCases
-@using MudExtensions
-<h3>Recipe</h3>
+
 <FadeInAnimation />
-<MudAnimate @ref="_animate" Selector=".fade-in" Duration="_duration" AnimationType="_animationType" Value="_value" ValueSecondary="_valueSecondary" Hover="_hover" Delay="_delay" Infinite="_infinite" IterationCount="_iterationCount"
-            AnimationTiming="_animationTiming" AnimationDirection="_animationDirection" AnimationFillMode="_animationFillMode" Paused="_paused" />
+
 <MudContainer>
     <MudGrid>
         <MudItem xs="6">
@@ -27,9 +25,9 @@
         </MudItem>
         @if (!GeneratingRecipe && !CollaborationSteps.Any())
         {
-        <MudItem xs="12">
-            <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
-        </MudItem>
+            <MudItem xs="12">
+                <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
+            </MudItem>
         }
     </MudGrid>
 </MudContainer>
@@ -42,44 +40,13 @@
         {
             continue;
         }
-        <MudContainer class=@GetContainerClass(step.Author)>
-            <MudStack  AlignItems="AlignItems.End" Justify="Justify.FlexStart" Row="true">
-                <MudBadge Color="Color.Success" Overlap="true" Bordered="true">
-                    <MudAvatar Size="Size.Medium">
-                        @if(step.Author == "CreateRecipe")
-                        {
-                            <MudImage Src="CreateRecipe.webp"></MudImage>
-                        }
-                        else
-                        {
-                            <MudImage Src="GordonRamsAI.webp"></MudImage>
-                        }
-                    </MudAvatar>
-                </MudBadge>
-                <MudText Typo="Typo.h5" Class="mt-8">@step.Author</MudText>
-
-            </MudStack>
-            @if (step.Recipe != null)
-            {
-                <MudText Typo="Typo.h5" Class="mt-8">@step.Recipe.Title</MudText>
-                <MudText Typo="Typo.body1" Class="mt-8">@step.Recipe.Description</MudText>
-                <MudButton OnClick="OnExpandCollapseClick">@(Expanded ? "Collapse" : "Expand")</MudButton>
-                <MudCollapse Expanded="Expanded">
-                    <MudText Typo="Typo.body2" Class="mt-8">@step.Recipe.Instructions</MudText>
-                </MudCollapse>
-            }
-            else
-            {
-                <MudText Typo="Typo.body2" Class="mt-8">@step.Message</MudText>
-            }
-
-        </MudContainer>
+        <StepComponent CollaborationStep="step"/>
     }
 }
 
 @if (LatestRecipe != null && !GeneratingRecipe)
 {
-    <MudContainer>
+    <MudContainer Class="mt-4">
         <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
         @if (ImageUri != null)
         {
@@ -87,7 +54,6 @@
         }
     </MudContainer>
 }
-
 
 @code {
 
@@ -106,7 +72,6 @@
     private string OriginalDishId { get; set; } = string.Empty;
     private string TwistId { get; set; } = string.Empty;
     private Uri? ImageUri { get; set; }
-    private bool Expanded { get; set; }
     private bool GeneratingRecipe { get; set; }
 
     private async Task BuildDish()
@@ -122,6 +87,7 @@
 
             CollaborationSteps.Add(step);
             StateHasChanged(); // Ensure UI is updated after each step is added
+            // Todo: scroll to bottom.
         }
 
         GeneratingRecipe = false;
@@ -138,30 +104,5 @@
         Twists = TwistService.GetAll();
         return base.OnInitializedAsync();
     }
-
-    private void OnExpandCollapseClick()
-    {
-        Expanded = !Expanded;
-    }
-
-    private string GetContainerClass(string author)
-    {
-        var scheme = author == "CreateRecipe" ? "primary" : "secondary";
-        return $"mud-theme-{scheme} rounded-0 fade-in";
-    }
-    
-    MudAnimate? _animate = new();
-    double _duration = 3;
-    double _delay = 0;
-    int _iterationCount = 1;
-    bool _hover;
-    bool _infinite;
-    AnimationType _animationType = AnimationType.Fade;
-    AnimationTiming _animationTiming = AnimationTiming.EaseInOut;
-    AnimationDirection _animationDirection = AnimationDirection.Normal;
-    AnimationFillMode _animationFillMode = AnimationFillMode.None;
-    bool _paused;
-    double _value = 360;
-    double? _valueSecondary;
 
 }

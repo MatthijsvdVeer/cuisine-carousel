@@ -4,7 +4,7 @@
 @using CuisineCarousel.UseCases
 @using MudExtensions
 <h3>Fabricate Food</h3>
-<FadeInAnimation />
+<FadeInAnimation/>
 
 <MudContainer>
     <MudGrid>
@@ -36,13 +36,10 @@
 @if (NewRecipe != null)
 {
     <MudContainer Class="fade-in">
-        <MudText Typo="Typo.h4" Class="mt-8">Your new recipe:</MudText>
-        <MudText Typo="Typo.h5" Class="mt-8">@NewRecipe.Title</MudText>
-        <MudText Typo="Typo.body1" Class="mt-8">@NewRecipe.Description</MudText>
-        <MudButton OnClick="OnExpandCollapseClick">@(Expanded ? "Collapse" : "Expand")</MudButton>
-        <MudCollapse Expanded="Expanded">
-            <MudText Typo="Typo.body2" Class="mt-8">@NewRecipe.Instructions</MudText>
-        </MudCollapse>
+        <MudPaper Outlined="true">
+            <MudText Typo="Typo.h4" Class="mt-8">Your new recipe:</MudText>
+            <RecipeComponent Recipe="NewRecipe"/>
+        </MudPaper>
     </MudContainer>
 }
 
@@ -71,9 +68,8 @@
 
     private string OriginalDishId { get; set; } = string.Empty;
     private string TwistId { get; set; } = string.Empty;
-    
+
     private Uri? ImageUri { get; set; }
-    private bool Expanded { get; set; }
     private bool GeneratingRecipe { get; set; }
 
     private async Task BuildDish()
@@ -94,8 +90,5 @@
         Twists = TwistService.GetAll();
         return base.OnInitializedAsync();
     }
-
-    private void OnExpandCollapseClick() {
-        Expanded = !Expanded;
-    }
 }
+
