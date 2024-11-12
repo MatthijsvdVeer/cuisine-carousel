@@ -3,7 +3,7 @@
 @using CuisineCarousel.Models
 @using CuisineCarousel.UseCases
 
-<FadeInAnimation />
+<FadeInAnimation/>
 
 <MudContainer>
     <MudGrid>
@@ -26,7 +26,9 @@
         @if (!GeneratingRecipe && !CollaborationSteps.Any())
         {
             <MudItem xs="12">
-                <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
+                <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Row="true">
+                    <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
+                </MudStack>
             </MudItem>
         }
     </MudGrid>
@@ -40,6 +42,7 @@
         {
             continue;
         }
+
         <StepComponent CollaborationStep="step"/>
     }
 }
@@ -47,11 +50,22 @@
 @if (LatestRecipe != null && !GeneratingRecipe)
 {
     <MudContainer Class="mt-4">
-        <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
-        @if (ImageUri != null)
-        {
-            <MudImage Class="fade-in" Src="@ImageUri.ToString()"></MudImage>
-        }
+        <MudGrid>
+            @if(GeneratingImage == false && ImageUri == null)
+            {
+            <MudItem xs="12">
+                <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Row="true">
+                    <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
+                </MudStack>
+            </MudItem>
+            }
+            @if (ImageUri != null)
+            {
+            <MudItem xs="12">
+                <MudImage Fluid="true" Src="@ImageUri.ToString()"></MudImage>
+            </MudItem>
+            }
+        </MudGrid>
     </MudContainer>
 }
 
@@ -73,6 +87,7 @@
     private string TwistId { get; set; } = string.Empty;
     private Uri? ImageUri { get; set; }
     private bool GeneratingRecipe { get; set; }
+    private bool GeneratingImage { get; set; }
 
     private async Task BuildDish()
     {
@@ -95,7 +110,9 @@
 
     private async Task GenerateImage()
     {
+        GeneratingImage = true;
         ImageUri = await this.Fabricator.Fabricate(LatestRecipe!);
+        GeneratingImage = false;
     }
 
     protected override Task OnInitializedAsync()

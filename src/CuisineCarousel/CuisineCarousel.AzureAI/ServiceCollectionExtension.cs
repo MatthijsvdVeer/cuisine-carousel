@@ -19,22 +19,28 @@ public static class ServiceCollectionExtension
 
         var config = OpenAiConfiguration.Get(configuration);
         services
-            .AddAzureOpenAIChatCompletion(ModelNames.Gpt4o, config.ApiUrl, new DefaultAzureCredential(), apiVersion: "2024-08-01-preview", modelId: ModelNames.Gpt4o)
-            .AddAzureOpenAIChatCompletion(ModelNames.Gpt35, config.ApiUrl, new DefaultAzureCredential(), apiVersion: "2024-08-01-preview", modelId: ModelNames.Gpt35)
-            .AddAzureOpenAIChatCompletion(ModelNames.Gpt4oMini, config.ApiUrl, new DefaultAzureCredential(), apiVersion: "2024-08-01-preview", modelId: ModelNames.Gpt4oMini)
-            .AddAzureOpenAITextToImage(ModelNames.DallE3, config.ApiUrl, new DefaultAzureCredential(), apiVersion: "2024-06-01", modelId: ModelNames.DallE3);
+            .AddAzureOpenAIChatCompletion(ModelNames.Gpt4o, config.ApiUrl, new DefaultAzureCredential(),
+                apiVersion: "2024-08-01-preview", modelId: ModelNames.Gpt4o)
+            .AddAzureOpenAIChatCompletion(ModelNames.Gpt35, config.ApiUrl, new DefaultAzureCredential(),
+                apiVersion: "2024-08-01-preview", modelId: ModelNames.Gpt35)
+            .AddAzureOpenAIChatCompletion(ModelNames.Gpt4oMini, config.ApiUrl, new DefaultAzureCredential(),
+                apiVersion: "2024-08-01-preview", modelId: ModelNames.Gpt4oMini)
+            .AddAzureOpenAITextToImage(ModelNames.DallE3, config.ApiUrl, new DefaultAzureCredential(),
+                apiVersion: "2024-06-01", modelId: ModelNames.DallE3);
 
         var kernelBuilder = services.AddKernel();
         kernelBuilder.Plugins.AddPromptyFunctions(loggerFactory);
         services.AddPromptyTemplates();
         // services.AddTransient<IRecipe, RecipeService>();
         services.AddTransient<IRecipe, OfflineRecipeService>();
-        services.AddTransient<IFabricator, ImageFabricator>();
+        // services.AddTransient<IFabricator, ImageFabricator>();
+        services.AddTransient<IFabricator, OfflineFabricator>();
         return services;
     }
 
-   private static IKernelBuilderPlugins AddPromptyFunctions(this IKernelBuilderPlugins kernelPlugins,
-       ILoggerFactory? factory)
+    private static IKernelBuilderPlugins AddPromptyFunctions(
+        this IKernelBuilderPlugins kernelPlugins,
+        ILoggerFactory? factory)
     {
         var functions = CreatePromptyFunctions(factory).ToArray();
 
@@ -56,9 +62,10 @@ public static class ServiceCollectionExtension
         var text = File.ReadAllText(fileName);
         return KernelFunctionPrompty.FromPrompty(text, loggerFactory: factory);
     }
-    
-    
+
+
     #region Experimental
+
     private static IServiceCollection AddPromptyTemplates(this IServiceCollection services)
     {
         var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -68,14 +75,15 @@ public static class ServiceCollectionExtension
             var promptTemplateConfig = CreatePromptyTemplateConfig(file);
             services.AddKeyedSingleton(promptTemplateConfig.Name, promptTemplateConfig);
         }
-        
+
         return services;
     }
-    
+
     private static PromptTemplateConfig CreatePromptyTemplateConfig(string fileName)
     {
         var text = File.ReadAllText(fileName);
         return KernelFunctionPrompty.ToPromptTemplateConfig(text);
     }
+
     #endregion
 }
