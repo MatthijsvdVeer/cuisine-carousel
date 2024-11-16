@@ -7,6 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Aspire.Azure.Data.Tables" Version="8.2.2" />
+      <PackageReference Include="Aspire.Azure.Storage.Blobs" Version="8.2.2" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\CuisineCarousel\CuisineCarousel.csproj" />
     </ItemGroup>
 

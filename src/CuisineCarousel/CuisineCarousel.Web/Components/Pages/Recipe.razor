@@ -2,109 +2,117 @@
 @attribute [StreamRendering]
 @using CuisineCarousel.Models
 @using CuisineCarousel.UseCases
-@using MudExtensions
 <h3>Fabricate Food</h3>
 <FadeInAnimation/>
 
 <MudContainer>
-    <MudGrid>
-        <MudItem xs="6">
-            <MudSelect @bind-Value="OriginalDishId" Label="Select dish" Placeholder="Pick a classic" AdornmentIcon="@Icons.Material.Filled.Fastfood" AdornmentColor="Color.Primary">
-                @foreach (var dish in OriginalDishes)
-                {
-                    <MudSelectItem Value="@dish.Id">@dish.Name</MudSelectItem>
-                }
-            </MudSelect>
-        </MudItem>
-        <MudItem xs="6">
-            <MudSelect @bind-Value="TwistId" Label="Select twist" Placeholder="Make it weird" AdornmentIcon="@Icons.Material.Filled.AddTask" AdornmentColor="Color.Primary">
-                @foreach (var twist in Twists)
-                {
-                    <MudSelectItem Value="@twist.Id">@twist.Name</MudSelectItem>
-                }
-            </MudSelect>
-        </MudItem>
-        @if (!GeneratingRecipe && NewRecipe == null)
+  <MudGrid>
+    <MudItem xs="6">
+      <MudSelect @bind-Value="OriginalDishId" Label="Select dish" Placeholder="Pick a classic" AdornmentIcon="@Icons.Material.Filled.Fastfood" AdornmentColor="Color.Primary">
+        @foreach (var dish in OriginalDishes)
         {
-            <MudItem xs="12">
-                <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Row="true">
-                    <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
-                </MudStack>
-            </MudItem>
+          <MudSelectItem Value="@dish.Id">@dish.Name</MudSelectItem>
         }
-    </MudGrid>
+      </MudSelect>
+    </MudItem>
+    <MudItem xs="6">
+      <MudSelect @bind-Value="TwistId" Label="Select twist" Placeholder="Make it weird" AdornmentIcon="@Icons.Material.Filled.AddTask" AdornmentColor="Color.Primary">
+        @foreach (var twist in Twists)
+        {
+          <MudSelectItem Value="@twist.Id">@twist.Name</MudSelectItem>
+        }
+      </MudSelect>
+    </MudItem>
+    @if (!GeneratingRecipe && NewRecipe == null)
+    {
+      <MudItem xs="12">
+        <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Row="true">
+          <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
+        </MudStack>
+      </MudItem>
+    }
+  </MudGrid>
 </MudContainer>
 
 @if (NewRecipe != null)
 {
-    <MudContainer Class="fade-in">
-        <MudPaper Outlined="true">
-            <MudText Typo="Typo.h4" Class="mt-8">Your new recipe:</MudText>
-            <RecipeComponent Recipe="NewRecipe"/>
-        </MudPaper>
-    </MudContainer>
+  <MudContainer Class="fade-in">
+    <MudPaper Outlined="true">
+      <MudText Typo="Typo.h4" Class="mt-8">Your new recipe:</MudText>
+      <RecipeComponent Recipe="NewRecipe"/>
+    </MudPaper>
+  </MudContainer>
 }
 
 @if (NewRecipe != null)
 {
-    <MudContainer Class="mt-4">
-        <MudGrid>
-            @if(GeneratingImage == false && ImageUri == null)
-            {
-                <MudItem xs="12">
-                    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Row="true">
-                        <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
-                    </MudStack>
-                </MudItem>
-            }
-            @if (ImageUri != null)
-            {
-                <MudItem xs="12">
-                    <MudImage Fluid="true" Src="@ImageUri.ToString()"></MudImage>
-                </MudItem>
-            }
-        </MudGrid>
-    </MudContainer>
+  <MudContainer Class="mt-4">
+    <MudGrid>
+      @if (GeneratingImage == false && ImageUri == null)
+      {
+        <MudItem xs="12">
+          <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Row="true">
+            <MudButton OnClick="() => GenerateImage()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Brush" EndIcon="@Icons.Material.Filled.Brush">Fabricate!</MudButton>
+          </MudStack>
+        </MudItem>
+      }
+      @if (ImageUri != null)
+      {
+        <MudItem xs="12">
+          <MudImage Fluid="true" Src="@ImageUri.ToString()"></MudImage>
+        </MudItem>
+        <MudItem xs="12">
+          <MudButton OnClick="() => PersistDish()" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" EndIcon="@Icons.Material.Filled.Save">Persist!</MudButton>
+        </MudItem>
+      }
+    </MudGrid>
+  </MudContainer>
 }
 
 @code {
 
-    [Inject] private ICreateRecipeUseCase CreateRecipeUseCase { get; set; } = null!;
-    [Inject] private IOriginalDish OriginalDish { get; set; } = null!;
-    [Inject] private ITwist TwistService { get; set; } = null!;
-    [Inject] private IFabricator Fabricator { get; set; } = null!;
+  [Inject] private ICreateRecipeUseCase CreateRecipeUseCase { get; set; } = null!;
+  [Inject] private IOriginalDish OriginalDish { get; set; } = null!;
+  [Inject] private ITwist TwistService { get; set; } = null!;
+  [Inject] private IFabricator Fabricator { get; set; } = null!;
+  [Inject] private IDish DishService { get; set; } = null!;
 
-    private Models.Recipe? NewRecipe { get; set; }
+  private Models.Recipe? NewRecipe { get; set; }
 
-    private IEnumerable<OriginalDish> OriginalDishes { get; set; } = Array.Empty<OriginalDish>();
-    private IEnumerable<Twist> Twists { get; set; } = Array.Empty<Twist>();
+  private IEnumerable<OriginalDish> OriginalDishes { get; set; } = Array.Empty<OriginalDish>();
+  private IEnumerable<Twist> Twists { get; set; } = Array.Empty<Twist>();
 
-    private string OriginalDishId { get; set; } = string.Empty;
-    private string TwistId { get; set; } = string.Empty;
+  private string OriginalDishId { get; set; } = string.Empty;
+  private string TwistId { get; set; } = string.Empty;
 
-    private Uri? ImageUri { get; set; }
-    private bool GeneratingRecipe { get; set; }
-    private bool GeneratingImage { get; set; }
+  private Uri? ImageUri { get; set; }
+  private bool GeneratingRecipe { get; set; }
+  private bool GeneratingImage { get; set; }
 
-    private async Task BuildDish()
-    {
-        GeneratingRecipe = true;
-        NewRecipe = await CreateRecipeUseCase.CreateRecipeAsync(OriginalDishId, TwistId);
-        GeneratingRecipe = false;
-    }
+  private async Task BuildDish()
+  {
+    GeneratingRecipe = true;
+    NewRecipe = await CreateRecipeUseCase.CreateRecipeAsync(OriginalDishId, TwistId);
+    GeneratingRecipe = false;
+  }
 
-    private async Task GenerateImage()
-    {
-        GeneratingImage = true;
-        ImageUri = await Fabricator.Fabricate(NewRecipe!);
-        GeneratingImage = false;
-    }
+  private async Task GenerateImage()
+  {
+    GeneratingImage = true;
+    ImageUri = await Fabricator.Fabricate(NewRecipe!);
+    GeneratingImage = false;
+  }
 
-    protected override Task OnInitializedAsync()
-    {
-        OriginalDishes = OriginalDish.GetAll();
-        Twists = TwistService.GetAll();
-        return base.OnInitializedAsync();
-    }
+  protected override Task OnInitializedAsync()
+  {
+    OriginalDishes = OriginalDish.GetAll();
+    Twists = TwistService.GetAll();
+    return base.OnInitializedAsync();
+  }
+
+  private async Task PersistDish()
+  {
+    _ = await DishService.SaveAsync(NewRecipe!, ImageUri!);
+  }
 
 }

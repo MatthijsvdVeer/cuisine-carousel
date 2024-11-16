@@ -1,13 +1,19 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿namespace CuisineCarousel.Storage;
 
-namespace CuisineCarousel.Storage;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 public static class ServiceCollectionExtension
 {
-    public static IServiceCollection AddStorage(this IServiceCollection services)
+    public static IHostApplicationBuilder AddStorage(this IHostApplicationBuilder builder, string tablesConnectionName,
+        string blobsConnectionName)
     {
-        services.AddSingleton<IOriginalDish, OriginalDishRepository>();
-        services.AddSingleton<ITwist, TwistRepository>();
-        return services;
+        builder.Services
+            .AddSingleton<IOriginalDish, OriginalDishRepository>()
+            .AddSingleton<ITwist, TwistRepository>()
+            .AddTransient<IDish, DishRepository>();
+        builder.AddAzureTableClient(tablesConnectionName);
+        builder.AddAzureBlobClient(blobsConnectionName);
+        return builder;
     }
 }

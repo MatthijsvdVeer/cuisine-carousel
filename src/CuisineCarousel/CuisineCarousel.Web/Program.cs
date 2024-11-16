@@ -8,15 +8,15 @@ using MudBlazor.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddOpenTelemetry("cuisine-carousel");
-
+builder.AddStorage("tables", "blobs");
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddMudServices();
 builder.Services
     .AddDomain()
-    .AddStorage()
     .AddAzureAi(builder.Configuration);
+
 
 var app = builder.Build();
 

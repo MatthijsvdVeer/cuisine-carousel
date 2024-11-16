@@ -10,10 +10,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.0"/>
+        <PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.2" />
+        <PackageReference Include="Aspire.Hosting.Azure.Storage" Version="8.2.2" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\CuisineCarousel.Init\CuisineCarousel.Init.csproj" />
       <ProjectReference Include="..\CuisineCarousel.Web\CuisineCarousel.Web.csproj" />
     </ItemGroup>
 
