@@ -83,5 +83,14 @@ module openAiModule 'openai.bicep' = {
   }
 }
 
+module storageModule 'storage.bicep' = {
+  name: 'storageModule'
+  params: {
+    location: location
+    workloadName: workloadName
+    principalId: appService.identity.principalId
+  }
+}
+
 output openAiEndpoint string = openAiModule.outputs.openai.endpoint
 output appServiceName string = appService.name
