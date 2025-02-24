@@ -27,7 +27,7 @@
         {
             <MudItem xs="12">
                 <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Row="true">
-                    <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(string.IsNullOrEmpty(OriginalDishId) || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
+                    <MudButton OnClick="() => BuildDish()" Variant="Variant.Filled" Color="Color.Primary" Disabled=@(OriginalDishId == null || string.IsNullOrEmpty(TwistId)) StartIcon="@Icons.Material.Filled.AutoAwesome" EndIcon="@Icons.Material.Filled.AutoAwesome">Build A Dish!</MudButton>
                 </MudStack>
             </MudItem>
         }
@@ -83,7 +83,7 @@
     private IEnumerable<OriginalDish> OriginalDishes { get; set; } = Array.Empty<OriginalDish>();
     private IEnumerable<Twist> Twists { get; set; } = Array.Empty<Twist>();
 
-    private string OriginalDishId { get; set; } = string.Empty;
+    private Guid? OriginalDishId { get; set; }
     private string TwistId { get; set; } = string.Empty;
     private Uri? ImageUri { get; set; }
     private bool GeneratingRecipe { get; set; }
@@ -92,7 +92,7 @@
     private async Task BuildDish()
     {
         GeneratingRecipe = true;
-        var asyncEnumerable = CreateCollaborativeRecipeUseCase.CreateRecipeAsync(OriginalDishId, TwistId);
+        var asyncEnumerable = CreateCollaborativeRecipeUseCase.CreateRecipeAsync(OriginalDishId.Value!, TwistId);
         await foreach (var step in asyncEnumerable)
         {
             if (step.Recipe != null)
@@ -115,11 +115,11 @@
         GeneratingImage = false;
     }
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        OriginalDishes = OriginalDish.GetAll();
+        OriginalDishes = await OriginalDish.GetAll();
         Twists = TwistService.GetAll();
-        return base.OnInitializedAsync();
+        await base.OnInitializedAsync();
     }
 
 }

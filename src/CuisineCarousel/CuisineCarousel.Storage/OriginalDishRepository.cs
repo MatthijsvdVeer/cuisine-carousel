@@ -2,26 +2,48 @@
 
 namespace CuisineCarousel.Storage;
 
-internal sealed class OriginalDishRepository : IOriginalDish
+using Azure;
+using Azure.Data.Tables;
+using Microsoft.Extensions.Logging;
+
+internal sealed class OriginalDishRepository(
+    TableServiceClient tableServiceClient,
+    ILogger<OriginalDishRepository> logger)
+    : IOriginalDish
 {
-    private static readonly List<OriginalDish> OriginalDishes =
-    [
-        new("1", "Spaghetti Carbonara", "A pasta dish made with eggs, cheese, bacon, and black pepper."),
-        new("2", "Chicken Tikka Masala", "A dish of roasted chicken chunks in a spicy sauce."),
-        new("3", "Beef Wellington", "A beef fillet coated with pâté and duxelles, which is then wrapped in puff pastry."),
-        new("4", "Sushi", "A dish of vinegared rice topped with raw fish or other ingredients."),
-        new ("5", "Pad Thai", "A stir-fried rice noodle dish commonly served as a street food and at casual local eateries in Thailand."),
-        new ("6", "Tacos", "A traditional Mexican dish consisting of a corn or wheat tortilla folded or rolled around a filling."),
-        new ("7", "Cepelinai", "A traditional Lithuanian dish made from grated and riced potatoes and usually stuffed with ground meat.")
-    ];
-    
-    public OriginalDish GetById(string id)
+    private readonly TableClient tableClient = tableServiceClient.GetTableClient(OriginalDishEntity.TableName);
+
+    public async Task<OriginalDish> GetById(Guid id)
     {
-        return OriginalDishes.Single(originalDish => originalDish.Id == id);
+        var response = await this.tableClient.GetEntityAsync<OriginalDishEntity>(
+            OriginalDishEntity.FormatKey(id),
+            OriginalDishEntity.FormatKey(id));
+        return response.Value.ToOriginalDish();
     }
 
-    public IEnumerable<OriginalDish> GetAll()
+    public async Task<IEnumerable<OriginalDish>> GetAll()
     {
-        return OriginalDishes;
+        var asyncPageable = this.tableClient.QueryAsync<OriginalDishEntity>();
+        var dishes = new List<OriginalDish>();
+        await foreach (var dishEntity in asyncPageable)
+        {
+            dishes.Add(dishEntity.ToOriginalDish());
+        }
+
+        return dishes;
+    }
+
+    public async Task Create(OriginalDish originalDish)
+    {
+        try
+        {
+            var tableEntity = OriginalDishEntity.FromOriginalDish(originalDish);
+            _ = await this.tableClient.AddEntityAsync(tableEntity);
+        }
+        catch (RequestFailedException exception)
+        {
+            logger.LogError(exception, "Failed to save dish");
+            throw;
+        }
     }
 }

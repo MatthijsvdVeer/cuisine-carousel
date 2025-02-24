@@ -4,5 +4,5 @@ namespace CuisineCarousel.UseCases;
 
 public interface ICreateRecipeUseCase
 {
-    public Task<Recipe> CreateRecipeAsync(string originalDishId, string twistId);
+    public Task<Recipe> CreateRecipeAsync(Guid originalDishId, string twistId);
 }

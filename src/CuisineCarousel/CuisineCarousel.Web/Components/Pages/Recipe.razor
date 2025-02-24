@@ -92,7 +92,8 @@
   private async Task BuildDish()
   {
     GeneratingRecipe = true;
-    NewRecipe = await CreateRecipeUseCase.CreateRecipeAsync(OriginalDishId, TwistId);
+    var id = Guid.Parse(OriginalDishId);
+    NewRecipe = await CreateRecipeUseCase.CreateRecipeAsync(id, TwistId);
     GeneratingRecipe = false;
   }
 
@@ -103,11 +104,11 @@
     GeneratingImage = false;
   }
 
-  protected override Task OnInitializedAsync()
+  protected override async Task OnInitializedAsync()
   {
-    OriginalDishes = OriginalDish.GetAll();
+    OriginalDishes = await OriginalDish.GetAll();
     Twists = TwistService.GetAll();
-    return base.OnInitializedAsync();
+    await base.OnInitializedAsync();
   }
 
   private async Task PersistDish()

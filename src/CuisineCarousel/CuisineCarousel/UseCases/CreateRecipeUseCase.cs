@@ -4,10 +4,10 @@ namespace CuisineCarousel.UseCases;
 
 internal sealed class CreateRecipeUseCase(IOriginalDish originalDish, ITwist twist, IRecipe recipe) : ICreateRecipeUseCase
 {
-    public Task<Recipe> CreateRecipeAsync(string originalDishId, string twistId)
+    public async Task<Recipe> CreateRecipeAsync(Guid originalDishId, string twistId)
     {
-        var foundDish = originalDish.GetById(originalDishId);
+        var foundDish = await originalDish.GetById(originalDishId);
         var foundTwist = twist.GetById(twistId);
-        return recipe.CreateRecipeAsync(foundDish.Name, foundDish.Description, foundTwist.Description);
+        return await recipe.CreateRecipeAsync(foundDish.Name, foundDish.Description, foundTwist.Description);
     }
 }

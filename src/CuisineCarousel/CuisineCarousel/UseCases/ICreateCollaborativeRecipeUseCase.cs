@@ -4,5 +4,5 @@ namespace CuisineCarousel.UseCases;
 
 public interface ICreateCollaborativeRecipeUseCase
 {
-    IAsyncEnumerable<CollaborationStep> CreateRecipeAsync(string originalDishId, string twistId);
+    IAsyncEnumerable<CollaborationStep> CreateRecipeAsync(Guid originalDishId, string twistId);
 }

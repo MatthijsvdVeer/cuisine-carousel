@@ -4,7 +4,9 @@ namespace CuisineCarousel;
 
 public interface IOriginalDish
 {
-    public OriginalDish GetById(string id);
+    public Task<OriginalDish> GetById(Guid id);
 
-    public IEnumerable<OriginalDish> GetAll();
+    public Task<IEnumerable<OriginalDish>> GetAll();
+
+    Task Create(OriginalDish originalDish);
 }
